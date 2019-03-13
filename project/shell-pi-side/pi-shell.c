@@ -1,5 +1,4 @@
 #include "rpi.h"
-#include "spi.h"
 #include "pi-shell.h"
 
 #define TX_SOFT 5

@@ -20,6 +20,11 @@ void OR_IN32(unsigned addr, unsigned val) {
         PUT32(addr, GET32(addr) | val);
 }
 
+void dev_barrier(void) {
+        dmb();
+        dsb();
+}
+
 int gpio_event_detected(unsigned pin) {
   if(pin >= 32)
     return -1;

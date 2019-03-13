@@ -2,7 +2,12 @@
 # 	http://scottmcpeak.com/autodepend/autodepend.html
 
 NAME=pi-shell
-OBJS = $(NAME).o bootloader.o spi.o		\
+TI=  timer-int
+GI= gpio-int
+OBJS = $(NAME).o bootloader.o\
+	$(GI)/gpio-int.o\
+        $(TI)/interrupts-asm.o  \
+         $(TI)/interrupts-c.o   \
 	$(LIBPI_PATH)/cs140e-start.o
 
 ifndef LIBPI_PATH

@@ -1024,7 +1024,7 @@ Disassembly of section .text:
  12c:	e59f002c 	ldr	r0, [pc, #44]	; 160 <gpio_read+0x44>
  130:	e59f102c 	ldr	r1, [pc, #44]	; 164 <gpio_read+0x48>
  134:	e59f202c 	ldr	r2, [pc, #44]	; 168 <gpio_read+0x4c>
- 138:	e3a03037 	mov	r3, #55	; 0x37
+ 138:	e3a03032 	mov	r3, #50	; 0x32
  13c:	ebfffffe 	bl	0 <printk>
  140:	ebfffffe 	bl	0 <rpi_reboot>
  144:	e59f0020 	ldr	r0, [pc, #32]	; 16c <gpio_read+0x50>
