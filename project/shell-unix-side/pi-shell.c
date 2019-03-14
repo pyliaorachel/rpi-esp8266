@@ -176,7 +176,12 @@ int esp(int pi_fd, char *argv[], int nargs) {
     //     }
 
 	// 	esp_note("> ");
-	// }
+    // }
+    // Read from pi
+    if (pi_readline(pi_fd, buf, PI_BUF_SIZE)) {
+        note("pi echoed: <%s>\n", buf);
+        return 1;
+    }
 
     return 0;
 }

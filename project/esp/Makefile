@@ -1,8 +1,5 @@
-# makefile based on scott mcpeak's grad school page :)
-# 	http://scottmcpeak.com/autodepend/autodepend.html
-
-NAME=pi-shell
-OBJS = $(NAME).o bootloader.o\
+NAME=esp
+OBJS = $(NAME).o \
 	$(LIBPI_PATH)/cs140e-start.o
 
 ifndef LIBPI_PATH
@@ -12,13 +9,9 @@ endif
 # useful set of defines.
 include $(LIBPI_PATH)/includes.mk
 
-CFLAGS += -I$(TI)
 CFLAGS += -Wno-unused-function
 
 all: libpi $(NAME).bin 
-
-run:
-	my-install $(NAME).bin
 
 # is there a better way to do this?
 libpi:
