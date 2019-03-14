@@ -170,14 +170,14 @@ int esp(int pi_fd, char *argv[], int nargs) {
     //     pi_put(pi_fd, buf);
 
     //     // Read from pi
-    //     if (pi_readline(pi_fd, buf, PI_BUF_SIZE)) {
+    //     while (pi_readline(pi_fd, buf, PI_BUF_SIZE)) {
+    //         if (strncmp(buf, "\r\n", 2))
+    //             break;
     //         note("pi echoed: <%s>\n", buf);
-    //         return 1;
     //     }
 
 	// 	esp_note("> ");
-	// }
-    // Read from pi
+    // }
     while (pi_readline(pi_fd, buf, PI_BUF_SIZE)) {
         note("pi echoed: <%s>\n", buf);
     }

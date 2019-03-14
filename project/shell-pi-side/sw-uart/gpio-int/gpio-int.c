@@ -1,14 +1,6 @@
 #include "gpio-int.h"
 
 
-// void int_handler(unsigned pc) {
-//   printk("!!!! In the handler!!!\n");
-//   if (gpio_event_detected(pin)) {
-//     printk("!!!Detected!!!!\n");
-//     gpio_event_clear(pin);
-//   }
-// }
-
 void OR_IN32(unsigned addr, unsigned val) {
   PUT32(addr, GET32(addr) | val);
 }
