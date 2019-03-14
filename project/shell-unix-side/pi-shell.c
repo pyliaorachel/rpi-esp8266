@@ -57,7 +57,6 @@ int pi_readline(int fd, char *buf, unsigned sz) {
             note("assuming: pi connection closed.  cleaning up\n");
                 exit(0);
         }
-        note("<%d> <%c> <%x>\n", buf[i], buf[i], buf[i]);
 		if(buf[i] == '\n') {
 			buf[i] = 0;
 			return 1;

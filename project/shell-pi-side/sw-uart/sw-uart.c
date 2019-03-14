@@ -6,11 +6,11 @@
 #define LOW 0
 #define HIGH 1
 
-unsigned RX_DATA = 0;
+unsigned char RX_DATA = 0;
 
 void int_handler(unsigned pc) {
   if (gpio_event_detected(RX_SOFT)) {
-    delay_us(DELAY >> 1);
+    delay_us(DELAY);
 
     // Latch 8 bits of data
     for (int i = 0; i < 8; i++) {
@@ -21,7 +21,7 @@ void int_handler(unsigned pc) {
     // End bit
     gpio_read(RX_SOFT);
 
-    uart_putc(RX_DATA);
+    printk("%c", RX_DATA);
     RX_DATA = 0;
 
     gpio_event_clear(RX_SOFT);
