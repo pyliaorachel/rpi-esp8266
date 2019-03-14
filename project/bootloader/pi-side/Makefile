@@ -1,7 +1,14 @@
+LIBPI = $(LIBPI_PATH)
+
 CC= arm-none-eabi-gcc
 CFLAGS = -I$(LIBPI)/.. -I. -Wall -Og -nostdlib -nostartfiles -ffreestanding 
 
-LIBPI = libpi.small
+ifndef LIBPI_PATH
+$(error LIBPI_PATH is not set: this should contain the absolute path to where this directory is.  Define it in your shell's initialiation.  For example, .tcshrc for tcsh or .bashrc for bash)
+endif
+
+# useful set of defines.
+include $(LIBPI_PATH)/includes.mk
 
 SRC = bootloader.c 
 OBJS = $(SRC:.c=.o)
@@ -12,14 +19,14 @@ start.o : start.s
 	arm-none-eabi-as start.s -o start.o
 
 kernel.img : memmap start.o $(OBJS)
-	make -C libpi.small
-	arm-none-eabi-ld start.o $(OBJS) libpi.small/libpi.a -T memmap -o bootloader.elf
+	make -C $(LIBPI)
+	arm-none-eabi-ld start.o $(OBJS) $(LIBPI)/libpi.a -T memmap -o bootloader.elf
 	arm-none-eabi-objdump -D bootloader.elf > bootloader.list
 	arm-none-eabi-objcopy bootloader.elf -O binary kernel.img
 
 clean :
 	rm -f *.o *.bin *.elf *.list *.img *~ Makefile.bak
-	make -C libpi.small clean
+	make -C $(LIBPI) clean
 
 depend:
 	makedepend -I$(LIBPI)/.. *.[ch] 

@@ -1,5 +1,5 @@
 LIB_OBJS = reboot.o timer.o helpers.o mem-barrier.o
-EXTRA= gpio.o gpioextra.o  uart.o
+EXTRA= gpio.o gpioextra.o  uart.o sw-uart/sw-uart.o sw-uart/gpio-int/gpio-int.o sw-uart/timer-int/interrupts-c.o sw-uart/timer-int/interrupts-asm.o 
 SRC = $(LIB_OBJS:.o=.c)
 
 ARM = arm-none-eabi

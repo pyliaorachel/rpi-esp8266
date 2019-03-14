@@ -7,7 +7,7 @@ _start:
 skip:
     mov sp,#0x08000000
     bl notmain
-hang: b reboot
+hang: b clean_reboot
 
 .globl BRANCHTO
 BRANCHTO:

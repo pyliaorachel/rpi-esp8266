@@ -52,7 +52,6 @@ void gpio_int_init(const int pin, const int edge_direction) {
   dev_barrier();
 
   printk("setting up GPIO interrupts for pin: %d\n", pin);
-  gpio_set_input(pin);
   
   if (edge_direction == RISING_EDGE) {
     gpio_set_pulldown(pin);

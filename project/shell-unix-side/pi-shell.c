@@ -27,6 +27,7 @@ static const char cmd_done[] = "CMD-DONE";
 // other commands
 const char reboot_cmd[] = "reboot\n";
 const char esp_cmd[] = "esp\n";
+const char esp_welcome_msg[] = "Welcome!";
 
 
 /************************************************************************
@@ -151,35 +152,40 @@ int esp(int pi_fd, char *argv[], int nargs) {
 
     // Send to pi to start ESP
     pi_put(pi_fd, esp_cmd);
+    esp_note("Please reset your ESP8266...\n");
+
+    // Read welcome message from ESP
+    pi_readline(pi_fd, buf, PI_BUF_SIZE);
+    if (strcmp(esp_welcome_msg, buf) != 0) {
+        esp_note("Error... received %s from ESP.", buf);
+        return -1;
+    }
+    esp_note("%s\n", buf);
 
     // ESP shell
-    // esp_note("> ");
-	// while (!done && fgets(buf, sizeof buf, stdin)) {
-    //     // Check if is end
-    //     if (strncmp(buf, "exit", 4) == 0)
-    //         break;
+    int pi_done = 0;
+    esp_note("> ");
+	while (!done && !pi_done && fgets(buf, sizeof buf, stdin)) {
+        // Replace \n with \r\n at the end
+		int n = strlen(buf);
+        buf[n-1] = '\r';
+        buf[n] = '\n';
+        buf[n+1] = 0;
+        n++;
 
-    //     // Replace \n with \r\n at the end
-	// 	int n = strlen(buf) - 1;
-    //     buf[n-1] = '\r';
-    //     buf[n] = '\n';
-    //     buf[n+1] = 0;
-    //     n++;
+        // Send to pi
+        pi_put(pi_fd, buf);
 
-    //     // Send to pi
-    //     pi_put(pi_fd, buf);
+        // Check if is end
+        if (strncmp(buf, "exit", 4) == 0)
+            break;
 
-    //     // Read from pi
-    //     while (pi_readline(pi_fd, buf, PI_BUF_SIZE)) {
-    //         if (strncmp(buf, "\r\n", 2))
-    //             break;
-    //         note("pi echoed: <%s>\n", buf);
-    //     }
-
-	// 	esp_note("> ");
-    // }
-    while (pi_readline(pi_fd, buf, PI_BUF_SIZE)) {
-        note("pi echoed: <%s>\n", buf);
+        // Read from pi
+        while (pi_readline(pi_fd, buf, PI_BUF_SIZE)) {
+            note("pi echoed: <%s>\n", buf);
+        }
+        note("finish reading\n");
+		esp_note("> ");
     }
 
     return 1;

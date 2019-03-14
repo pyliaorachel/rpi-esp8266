@@ -4,33 +4,37 @@
 #define RX_SOFT 6
 #define DELAY 104U // baudrate 9600
 
-unsigned char RX_DATA = 0;
-
 void int_handler(unsigned pc) {
   if (gpio_event_detected(RX_SOFT)) {
-    sw_uart_receive_byte();
+    //unsigned char data = sw_uart_read_byte();
   }
 }
 
-void sw_uart_receive_byte() {
+unsigned char sw_uart_read_byte() {
+  unsigned char c = 0;
   delay_us(DELAY);
 
   // Latch 8 bits of data
-  for (int i = 0; i < 8; i++) {
+  for (unsigned bit = 0; bit < 8; bit++) {
     unsigned data = gpio_read(RX_SOFT);
-    RX_DATA |= data << i;
+    c |= data << bit;
     delay_us(DELAY);
   }
   // End bit
   gpio_read(RX_SOFT);
 
-  printk("%c", RX_DATA);
-  RX_DATA = 0;
-
   gpio_event_clear(RX_SOFT);
+  return c;
 }
 
-void sw_uart_send_byte(char c) {
+unsigned char sw_uart_getc() {
+  // TODO: timeout
+  while (gpio_read(RX_SOFT) != LOW)
+    delay_us(DELAY);
+  return sw_uart_read_byte(); 
+}
+
+void sw_uart_putc(char c) {
   gpio_write(TX_SOFT, LOW);
   delay_us(DELAY);
   for (unsigned bit = 0; bit < 8; bit++) {
@@ -41,17 +45,36 @@ void sw_uart_send_byte(char c) {
   delay_us(DELAY);
 }
 
+int sw_uart_readline(char *buf, unsigned sz) {
+  for (int i = 0; i < sz; i++) {
+		buf[i] = sw_uart_getc();
+		if (buf[i] == '\n') {
+			buf[i] = 0;
+			return i;
+		}
+  }
+  return -1;
+}
+
 void sw_uart_send_data(const char* data, unsigned nbytes) {
-  printk(data);
   for (unsigned i = 0; i < nbytes; i++) {
     char c = data[i];
-    sw_uart_send_byte(c);
+    sw_uart_putc(c);
   }
 }
 
+void sw_uart_writeline(const char* data) {
+  int i = 0;
+  while (data[i] != '\n') {
+    char c = data[i];
+    sw_uart_putc(c);
+  }
+  sw_uart_putc('\n');
+}
+
 void sw_uart_init_rx() {
-  gpio_int_init(RX_SOFT, FALLING_EDGE);
-  RX_DATA = 0;
+  gpio_set_input(RX_SOFT);
+  //gpio_int_init(RX_SOFT, FALLING_EDGE);
 }
 
 void sw_uart_init_tx() {

@@ -74,6 +74,9 @@ void simple_boot(int fd, const unsigned char * buf, unsigned n) {
     // Check program should be padded, and n should be multiple of 4
     if (n % 4 != 0)
         panic("nbytes %d not multiple of 4", n);
+    fprintf(stderr, "getting\n");
+    unsigned x = get_uint(fd);
+    fprintf(stderr, "%x\n", x);
 
     // Setup: send SOH, nbytes, checksum of program
     unsigned checksum = crc32(buf, n);

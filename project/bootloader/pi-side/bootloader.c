@@ -6,7 +6,7 @@
 #define __SIMPLE_IMPL__
 #include "../shared-code/simple-boot.h"
 
-#include "libpi.small/rpi.h"
+#include "rpi.h"
 
 #define ADDR_LIMIT 0x20000000 // Start of peripheral
 
@@ -33,7 +33,7 @@ static void put_uint(unsigned u) {
 
 static void die(int code) {
         put_uint(code);
-        reboot();
+        clean_reboot();
 }
 
 // simple utility function to check that a u32 read matches <v>.
@@ -69,7 +69,8 @@ void notmain(void) {
 
 	// XXX: cs107e has this delay; doesn't seem to be required if 
 	// you drain the uart.
-	delay_ms(500);
+    delay_ms(500);
+    put_uint(1);
 
     // Setup: get SOH, nbytes, checksum of program
     unsigned soh = get_uint();
@@ -109,5 +110,5 @@ void notmain(void) {
     BRANCHTO(ARMBASE);
 
 	// Should not get back here, but just in case.
-	reboot();
+	clean_reboot();
 }
