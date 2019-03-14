@@ -5,16 +5,15 @@
 
 #define __SIMPLE_IMPL__
 #include "../shared-code/simple-boot.h"
-
 #include "rpi.h"
 
 #define ADDR_LIMIT 0x20000000 // Start of peripheral
 
 static void send_byte(unsigned char uc) {
-	uart_putc(uc);
+	sw_uart_putc(uc);
 }
 static unsigned char get_byte(void) { 
-    return uart_getc();
+    return sw_uart_getc();
 }
 
 static unsigned get_uint(void) {
@@ -65,7 +64,7 @@ void get_binary(unsigned * base, unsigned nbytes) {
 //	8. jump to ARMBASE.
 //
 void notmain(void) {
-	uart_init();
+	sw_uart_init();
 
 	// XXX: cs107e has this delay; doesn't seem to be required if 
 	// you drain the uart.

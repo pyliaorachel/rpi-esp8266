@@ -7,31 +7,29 @@
 #
 # TODO: You should replace these .o's with your code and remove
 # the use of SUPPORT_OBJS
-SUPPORT_OBJS= cs140e-gpioextra.o cs140e-uart.o 
+#SUPPORT_OBJS= cs140e-gpioextra.o cs140e-uart.o 
+SUPPORT_OBJS= 
 
 START= cs140e-start.o
 
 # add your new files here.
 # e.g., my-uart.c
-SRC = 	cs140e-printf.c  	\
+SRC = 	cs140e-printf.c 	\
 	cs140e-reboot.c  				\
 	cs140e-timer.c 					\
-	cs140e-mem-barrier.s  	\
+	cs140e-mem-barrier.s		\
 	cs140e-stdlib.c					\
 	cs140e-cstart.c					\
 	cs140e-rand.c						\
-	cs140e-kmalloc.c				\
 	my-gpio.c								\
 	cs140e-pwm.c						\
 	cs140e-cache.c					\
-	cs140e-asm.s						\
 	cs140e-put-get.s 				\
-	sw-uart/timer-int/interrupts-c.c 		\
-	sw-uart/timer-int/interrupts-asm.s	\
-	sw-uart/gpio-int/gpio-int.c 				\
-	sw-uart/sw-uart.c
-
-TARGET = libpi.a
+	my-uart.c								\
+	sw-uart/sw-uart.c 			\
+	sw-uart/gpio-int/gpio-int.c 			\
+	sw-uart/timer-int/interrupts-c.c 	\
+	sw-uart/timer-int/interrupts-ams.s
 
 # defines CC, etc.
 include includes.mk
@@ -43,7 +41,10 @@ endif
 LIB_OBJS := $(SRC:.c=.o)
 LIB_OBJS := $(LIB_OBJS:.s=.o)
 
-all : $(TARGET) $(START) 
+TARGET = libpi.a
+
+all : $(TARGET) $(START)
+
 
 # we bundle start.s with the library: just make different ones for each
 # different start so that the library is internally consistent.
@@ -75,5 +76,9 @@ $(TARGET): $(LIB_OBJS) $(SUPPORT_OBJS)
 .s.o: 
 	$(AS) $(ASFLAGS) $< -o $@
 
+
 clean :
-	rm -f $(LIB_OBJS) cs140e-start.o *.bin *.hex *.elf *.list *.img *~ $(TARGET)  Makefile.bak  *.d 
+	rm -f $(LIB_OBJS) cs140e-start.o *.bin *.hex *.elf *.list *.img *~ $(TARGET)  Makefile.bak  *.d
+
+depend: 
+	makedepend $(SRC)

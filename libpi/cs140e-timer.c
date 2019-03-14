@@ -1,11 +1,11 @@
 #include "rpi.h"
 
-// roughly 2-3x the number of cyles.  dunno if we care.  can read cycle count from
-// cp15 iirc.
-void delay_cycles(unsigned ticks) {
+#if 0
+void delay(unsigned ticks) {
         while(ticks-- > 0)
                 asm("add r1, r1, #0");
 }
+#endif
 
 unsigned timer_get_time(void) {
 	return GET32(0x20003004);

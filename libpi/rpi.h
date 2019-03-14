@@ -12,9 +12,6 @@
 
 #ifndef FAKE_PI
 	// if we are compiling fake, then I think we want to override this.
-#   include <stddef.h>
-#   include <stdint.h>
-#if 0
 	typedef unsigned uint32_t;
 	typedef unsigned short uint16_t;
 	typedef unsigned char uint8_t;
@@ -22,24 +19,16 @@
 	typedef int int32_t;
 	typedef signed char int8_t;
 	typedef unsigned size_t;
-	typedef unsigned *uintptr_t;
 #	define offsetof(st, m) __builtin_offsetof(st, m)
-#endif
 
 	// shouldn't link these in if running on linux?  these conflict
 	int strcmp(const char *_p, const char *q);
 	void *memset(void *_p, int c, size_t n) ;
 	int memcmp(const void *_s1, const void *_s2, size_t nbytes);
 	void *memcpy(void *dst, const void *src, size_t nbytes);
-	int strncmp(const char* _s1, const char* _s2, size_t n);
 #else
 #	include <stddef.h>
 #endif
-
-char *strcat (char *dest, const char *src);
-size_t strlen(const char *p);
-char *strcpy(char * s1, const char * s2);
-
 
 /*****************************************************************************
  * common device functions
@@ -50,7 +39,7 @@ int uart_getc(void);
 void uart_putc(unsigned c);
 
 // simple timer functions.
-void delay_cycles(unsigned ticks) ;
+void delay(unsigned ticks) ;
 unsigned timer_get_time(void) ;
 void delay_us(unsigned us) ;
 void delay_ms(unsigned ms) ;
@@ -62,10 +51,8 @@ unsigned short rpi_rand(void);
  * standard libc like functions for the pi.
  */
 int printk(const char *format, ...);
-    // __attribute__ ((format (printf, 1, 2)));
 int snprintk(char *buf, size_t n, const char *fmt, ...);
 int putk(const char *msg);
-int uart_hex(unsigned h);
 
 int rpi_putchar(int c);
 
@@ -88,16 +75,10 @@ void dummy(unsigned);
 
 void *kmalloc_heap_end(void);
 void *kmalloc_heap_start(void);
-
+void *kmalloc(unsigned sz) ;
 void kfree(void *p);
 void kfree_all(void);
-// returns 0-filled memory aligned to <nbits_alignment>
-void *kmalloc_aligned(unsigned nbytes, unsigned nbits_alignment);
-// returns 0-filled memory.
-void *kmalloc(unsigned nbytes) ;
 
-// set where the heap starts.
-void kmalloc_set_start(unsigned _addr);
 
 /*****************************************************************************
  * memory barriers
@@ -137,14 +118,9 @@ unsigned short get16(const volatile void *addr);
 unsigned char GET8(unsigned addr);
 unsigned char get8(const volatile void *addr);
 
-// jump to <addr>
-void BRANCHTO(unsigned addr);
-
 // cache enable
 void enable_cache(void) ;
 void disable_cache(void) ;
-
-unsigned rpi_get_cpsr(void);
 
 #include "gpio.h"
 #include "assert.h"
