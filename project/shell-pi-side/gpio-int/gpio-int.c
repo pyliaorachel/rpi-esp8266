@@ -1,9 +1,5 @@
 /* make GPIO pin generate an interrupt when it goes low to high.  */
-#include "rpi.h"
-#include "rpi-armtimer.h"
-#include "rpi-interrupts.h"
-// use whatever pin you want.
-const int pin = 20;
+#include "gpio-int.h"
 
 // client has to define this.
 void int_handler(unsigned pc) {
@@ -13,17 +9,16 @@ void int_handler(unsigned pc) {
     printk("!!!Detected!!!!\n");
     gpio_event_clear(pin);
   }
-    
 }
 
 void OR_IN32(unsigned addr, unsigned val) {
-        PUT32(addr, GET32(addr) | val);
+  PUT32(addr, GET32(addr) | val);
 }
 
 int gpio_event_detected(unsigned pin) {
   if(pin >= 32)
     return -1;
-  if (GET32(GPEDS0) & (1<<pin))
+  if (GET32(GPEDS0) & (1 << pin))
     return 1;
   return 0;
 }
@@ -31,7 +26,7 @@ int gpio_event_detected(unsigned pin) {
 int gpio_event_clear(unsigned pin) {
   if(pin >= 32)
     return -1;
-  PUT32(GPEDS0, 1<<pin);
+  PUT32(GPEDS0, 1 << pin);
   return 0;
 }
 
@@ -42,7 +37,7 @@ int gpio_int_rising_edge(unsigned pin) {
   return 0;
 }
 
-void gpio_int_init() {
+void gpio_int_init(const int pin) {
   printk("about to install handlers\n");
   install_int_handlers();
   
@@ -75,9 +70,9 @@ void gpio_int_init() {
   printk("enabled!\n");
 }
 
-
 /*
 void notmain() {
+  const int pin = 20;
   uart_init();
   
   printk("about to install handlers\n");

@@ -9,6 +9,11 @@ enum { TRACE_FD_REPLAY = 11, TRACE_FD_HANDOFF };
         fprintf(stderr, ##msg);         \
 } while(0)
 
+#define esp_note(msg...) do {               \
+        fprintf(stderr, "ESP:");        \
+        fprintf(stderr, ##msg);         \
+} while(0)
+
 #define err(msg...) do {                                                \
         fprintf(stderr, "PIX:ERROR:%s:%s:%d:", __FILE__, __FUNCTION__, __LINE__); \
         fprintf(stderr, ##msg);                                         \

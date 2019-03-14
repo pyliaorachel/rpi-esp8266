@@ -149,14 +149,35 @@ int esp(int pi_fd, char *argv[], int nargs) {
 	char buf[PI_BUF_SIZE];
     buf[0] = 0; // clean up
 
-    // Send to pi
+    // Send to pi to start ESP
     pi_put(pi_fd, esp_cmd);
-    
-    // Read from pi
-    if (pi_readline(pi_fd, buf, PI_BUF_SIZE)) {
-        note("pi echoed: <%s>\n", buf);
-        return 1;
-    }
+
+    // ESP shell
+    // esp_note("> ");
+	// while (!done && fgets(buf, sizeof buf, stdin)) {
+    //     // Check if is end
+    //     if (strncmp(buf, "exit", 4) == 0)
+    //         break;
+
+    //     // Replace \n with \r\n at the end
+	// 	int n = strlen(buf) - 1;
+    //     buf[n-1] = '\r';
+    //     buf[n] = '\n';
+    //     buf[n+1] = 0;
+    //     n++;
+
+    //     // Send to pi
+    //     pi_put(pi_fd, buf);
+
+    //     // Read from pi
+    //     if (pi_readline(pi_fd, buf, PI_BUF_SIZE)) {
+    //         note("pi echoed: <%s>\n", buf);
+    //         return 1;
+    //     }
+
+	// 	esp_note("> ");
+	// }
+
     return 0;
 }
 
