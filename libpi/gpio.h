@@ -84,6 +84,26 @@ enum {
 #define GPIO_TX GPIO_PIN14
 #define GPIO_RX GPIO_PIN15
 
+#define GPIO_BASE 0x20200000
+#define GPSET0  (GPIO_BASE+0x1c)
+#define GPCLR0  (GPIO_BASE+0x28)
+#define GPLEV0  (GPIO_BASE+0x34)
+// GPIO Pin Rising Edge Detect Enable 0/1                                                                                              
+#define GPREN0 (GPIO_BASE+0x4C)
+#define GPREN1 (GPIO_BASE+0x50)
+// GPIO Pin Falling Edge Detect Enable 0/1                                                                                             
+#define GPFEN0 (GPIO_BASE+0x58)
+#define GPFEN1 (GPIO_BASE+0x5C)
+// GPIO Pin Async Rising Edge Detect Enable 0/1                                                                                        
+#define GPAREN0 (GPIO_BASE+0x7C)
+#define GPAREN1 (GPIO_BASE+0x80)
+// GPIO Pin Async Falling Edge Detect Enable 0/1                                                                                       
+#define GPAFEN0 (GPIO_BASE+0x88)
+#define GPAFEN1 (GPIO_BASE+0x8C)
+// GPIO Pin Event Detect Status 0/1                                                                                                    
+#define GPEDS0 (GPIO_BASE+0x40)
+#define GPEDS1 (GPIO_BASE+0x44)
+
 /*
  * These enumerated values establish symbolic names for each of the
  * available GPIO pin functions. Each pin function corresponds to

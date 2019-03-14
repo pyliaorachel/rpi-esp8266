@@ -81,39 +81,39 @@ static int done(unsigned char *s) {
 // read and echo the characters from the tty until it closes (pi rebooted)
 // or we see a string indicating a clean shutdown.
 static void echo(int fd, const char *portname) {
-        while(1) {
-                unsigned char buf [4096];
-                int n = read (fd, buf, sizeof buf - 1);
-		if(n>0)
-			trace_read_bytes(buf, n);
-                if(!n) {
-                        struct stat s;
-			// change this to fstat.
-                        // if(stat(portname, &s) < 0) {
-                        if(fstat(fd, &s) < 0) {
-				fprintf(stderr, "read EOF\n");
-				perror("fstat");
-                                fprintf(stderr, 
-					"pi connection closed.  cleaning up\n");
-                                exit(0);
-                        }
-			// gonna have to override this if you want to test.
-                        usleep(1000);
-                } else if(n < 0) {
-			fprintf(stderr, "ERROR: got %s res=%d\n", strerror(n),n);
-                        fprintf(stderr, "pi connection closed.  cleaning up\n");
-                        exit(0);
-		} else {
-                        buf[n] = 0;
-                        // XXX printf does not flush until newline!
-                        fprintf(stderr, "%s", buf);
-
-			if(done(buf)) {
-				fprintf(stderr, "\nSaw done\n");
-                        	fprintf(stderr, "\nbootloader: pi exited.  cleaning up\n");
-                        	exit(0);
-			}
+    while(1) {
+        unsigned char buf [4096];
+        int n = read(fd, buf, sizeof buf - 1);
+        if(n>0)
+            trace_read_bytes(buf, n);
+            if(!n) {
+                struct stat s;
+                // change this to fstat.
+                // if(stat(portname, &s) < 0) {
+                if(fstat(fd, &s) < 0) {
+                    fprintf(stderr, "read EOF\n");
+                    perror("fstat");
+                    fprintf(stderr, 
+                        "pi connection closed.  cleaning up\n");
+                    exit(0);
                 }
+                // gonna have to override this if you want to test.
+                usleep(1000);
+            } else if(n < 0) {
+                fprintf(stderr, "ERROR: got %s res=%d\n", strerror(n),n);
+                fprintf(stderr, "pi connection closed.  cleaning up\n");
+                exit(0);
+            } else {
+                buf[n] = 0;
+                // XXX printf does not flush until newline!
+                fprintf(stderr, "%s", buf);
+
+            if(done(buf)) {
+                fprintf(stderr, "\nSaw done\n");
+                fprintf(stderr, "\nbootloader: pi exited.  cleaning up\n");
+                exit(0);
+            }
+        }
 	}
 }
 
@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
 			argv[argc] = 0;
 			break;
 		} else
-                	panic("my-install: bad argument '%s'.\n", argv[i]);
+            panic("my-install: bad argument '%s'.\n", argv[i]);
 	
 	}
 	int prog_nbytes;
@@ -152,10 +152,12 @@ int main(int argc, char *argv[]) {
 	if((fd = trace_get_fd()) < 0) {
 	 	fd = open_tty(&portname);
 
- 		// set it to be 8n1  and 115200 baud
-		//fd = set_tty_to_8n1(fd, B115200, 1);
+		// set it to be 8n1 and set baudrate
+#if IS_SW_UART
 		fd = set_tty_to_8n1(fd, B9600, 1);
-
+#else
+		fd = set_tty_to_8n1(fd, B115200, 1);
+#endif
 		// giving the pi side a chance to get going.
 		sleep(1);
 	}
@@ -176,7 +178,7 @@ int main(int argc, char *argv[]) {
 #endif
 	fprintf(stderr, "my-install: about to boot\n");
 
-        simple_boot(fd, program, prog_nbytes);
+    simple_boot(fd, program, prog_nbytes);
 	if(exec_args) {
 		handoff_to(fd,exec_args);
 	} else if(print_p) {

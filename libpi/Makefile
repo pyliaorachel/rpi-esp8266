@@ -8,7 +8,7 @@
 # TODO: You should replace these .o's with your code and remove
 # the use of SUPPORT_OBJS
 #SUPPORT_OBJS= cs140e-gpioextra.o cs140e-uart.o 
-SUPPORT_OBJS= 
+SUPPORT_OBJS= cs140e-gpioextra.o
 
 START= cs140e-start.o
 
@@ -26,10 +26,10 @@ SRC = 	cs140e-printf.c 	\
 	cs140e-cache.c					\
 	cs140e-put-get.s 				\
 	my-uart.c								\
-	sw-uart/sw-uart.c 			\
-	sw-uart/gpio-int/gpio-int.c 			\
-	sw-uart/timer-int/interrupts-c.c 	\
-	sw-uart/timer-int/interrupts-ams.s
+	sw-uart/timer-int/interrupts-c.c 		\
+	sw-uart/timer-int/interrupts-asm.s	\
+	sw-uart/gpio-int/gpio-int.c 				\
+	sw-uart/sw-uart.c
 
 # defines CC, etc.
 include includes.mk

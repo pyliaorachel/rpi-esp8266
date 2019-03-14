@@ -7,6 +7,7 @@
 void int_handler(unsigned pc) {
   if (gpio_event_detected(RX_SOFT)) {
     //unsigned char data = sw_uart_read_byte();
+    gpio_event_clear(RX_SOFT);
   }
 }
 
@@ -22,15 +23,13 @@ unsigned char sw_uart_read_byte() {
   }
   // End bit
   gpio_read(RX_SOFT);
-
-  gpio_event_clear(RX_SOFT);
   return c;
 }
 
 unsigned char sw_uart_getc() {
   // TODO: timeout
   while (gpio_read(RX_SOFT) != LOW)
-    delay_us(DELAY);
+    delay_us(DELAY >> 1); // critical! don't wait for too long
   return sw_uart_read_byte(); 
 }
 
@@ -74,11 +73,13 @@ void sw_uart_writeline(const char* data) {
 
 void sw_uart_init_rx() {
   gpio_set_input(RX_SOFT);
+  gpio_set_pullup(RX_SOFT);
   //gpio_int_init(RX_SOFT, FALLING_EDGE);
 }
 
 void sw_uart_init_tx() {
   gpio_set_output(TX_SOFT);
+  gpio_set_pullup(TX_SOFT);
   gpio_write(TX_SOFT, HIGH);
 }
 

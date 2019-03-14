@@ -24,20 +24,50 @@ static unsigned get_uint(void) {
 	return u;
 }
 static void put_uint(unsigned u) {
-        send_byte((u >> 0)  & 0xff);
-        send_byte((u >> 8)  & 0xff);
-        send_byte((u >> 16) & 0xff);
-        send_byte((u >> 24) & 0xff);
+    send_byte((u >> 0)  & 0xff);
+    send_byte((u >> 8)  & 0xff);
+    send_byte((u >> 16) & 0xff);
+    send_byte((u >> 24) & 0xff);
+}
+
+static void send_byte_robust(unsigned char uc) {
+    for (int i = 0; i < ROBUST_ITER; i++)
+	    sw_uart_putc(uc);
+}
+static unsigned char get_byte_robust(void) {
+    char hash[256] = {0};
+    unsigned char byte = -1;
+    for (int i = 0; i < ROBUST_ITER; i++) {
+        unsigned char c = sw_uart_getc();
+        hash[c]++;
+        if (byte != -1 && hash[c] * 2 > ROBUST_ITER)
+            byte = c;
+    }
+    return byte;
+}
+
+static unsigned get_uint_robust(void) {
+	unsigned u = get_byte_robust();
+        u |= get_byte_robust() << 8;
+        u |= get_byte_robust() << 16;
+        u |= get_byte_robust() << 24;
+	return u;
+}
+static void put_uint_robust(unsigned u) {
+    send_byte_robust((u >> 0)  & 0xff);
+    send_byte_robust((u >> 8)  & 0xff);
+    send_byte_robust((u >> 16) & 0xff);
+    send_byte_robust((u >> 24) & 0xff);
 }
 
 static void die(int code) {
-        put_uint(code);
-        clean_reboot();
+    put_uint_robust(code);
+    clean_reboot();
 }
 
 // simple utility function to check that a u32 read matches <v>.
 void expect(unsigned v) {
-	unsigned x = get_uint();
+	unsigned x = get_uint_robust();
 	if (x != v) {
         die(NAK);
     }
@@ -47,7 +77,7 @@ void expect(unsigned v) {
 void get_binary(unsigned * base, unsigned nbytes) {
     unsigned nloaded = 0;
     while (nloaded < nbytes) {
-        *base = get_uint();
+        *base = get_uint_robust();
         base++;
         nloaded += sizeof(unsigned);
     }
@@ -64,26 +94,25 @@ void get_binary(unsigned * base, unsigned nbytes) {
 //	8. jump to ARMBASE.
 //
 void notmain(void) {
-	sw_uart_init();
+    sw_uart_init();
 
 	// XXX: cs107e has this delay; doesn't seem to be required if 
 	// you drain the uart.
     delay_ms(500);
-    put_uint(1);
 
     // Setup: get SOH, nbytes, checksum of program
-    unsigned soh = get_uint();
-    unsigned n = get_uint();
-    unsigned checksum = get_uint();
+    unsigned soh = get_uint_robust();
+    unsigned n = get_uint_robust();
+    unsigned checksum = get_uint_robust();
 
     // Check if program size too big
     if (ARMBASE + n >= ADDR_LIMIT)
         die(NAK);
 
     // Send back setup info
-    put_uint(soh);
-    put_uint(crc32(&n, sizeof(n)));
-    put_uint(checksum);
+    put_uint_robust(soh);
+    put_uint_robust(crc32(&n, sizeof(n)));
+    put_uint_robust(checksum);
 
     // Get ACK
     expect(ACK);
@@ -98,7 +127,7 @@ void notmain(void) {
     unsigned new_checksum = crc32((unsigned char *) ARMBASE, n);
     if (checksum != new_checksum)
         die(NAK);
-    put_uint(ACK);
+    put_uint_robust(ACK);
 
 	// XXX: appears we need these delays or the unix side gets confused.
 	// I believe it's b/c the code we call re-initializes the uart; could

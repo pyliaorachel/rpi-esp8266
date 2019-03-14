@@ -8,6 +8,7 @@
 #include <termios.h>
 
 #include "demand.h"
+#include "../shared-code/simple-boot.h"
 
 // XXX: if anyone figures out a cleaner way to do this, lmk.   I don't
 // have a mac, so stopped as soon as we had something that worked on 
@@ -16,27 +17,32 @@
 //	- <timeout> is in seconds (< 1 ok)
 // 	- <speed> is baud rate.
 int set_tty_to_8n1(int fd, unsigned speed, double timeout) {
-        struct termios tty;
-        memset (&tty, 0, sizeof tty);
-        if (tcgetattr (fd, &tty) != 0)
-                panic("tcgetattr failed\n");
-        memset (&tty, 0, sizeof tty);
+    struct termios tty;
+    memset (&tty, 0, sizeof tty);
+    if (tcgetattr (fd, &tty) != 0)
+            panic("tcgetattr failed\n");
+    memset (&tty, 0, sizeof tty);
 
 	// https://github.com/rlcheng/raspberry_pi_workshop
 	cfsetspeed(&tty, speed);
 
-        // disable IGNBRK for mismatched speed tests; otherwise receive break
-        // as \000 chars
+    // disable IGNBRK for mismatched speed tests; otherwise receive break
+    // as \000 chars
 
 	// XXX: wait, does this disable break or ignore-ignore break??
-        tty.c_iflag &= ~IGNBRK;         // disable break processing
-        tty.c_lflag = 0;                // no signaling chars, no echo,
-                                        // no canonical processing
-        tty.c_oflag = 0;                // no remapping, no delays
-        tty.c_cc[VMIN]  = 0;            // read doesn't block
-	assert(timeout < 100 && timeout > 0);
-	// 0.1 seconds read timeout
-        tty.c_cc[VTIME] = (int)timeout *200;            
+    tty.c_iflag &= ~IGNBRK;         // disable break processing
+    tty.c_lflag = 0;                // no signaling chars, no echo,
+                                    // no canonical processing
+    tty.c_oflag = 0;                // no remapping, no delays
+    tty.c_cc[VMIN]  = 0;            // read doesn't block
+    assert(timeout < 100 && timeout > 0);
+
+	// read timeout
+#if IS_SW_UART
+	tty.c_cc[VTIME] = (int)timeout * 200 * ROBUST_ITER;
+#else
+	tty.c_cc[VTIME] = (int)timeout * 200;
+#endif
 
 	/*
 	 * Setup TTY for 8n1 mode, used by the pi UART.

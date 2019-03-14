@@ -22,10 +22,10 @@ enum {
 };
 
 // use this if you need memory barriers.
-void dev_barrier(void) {
-	dmb();
-	dsb();
-}
+// void dev_barrier(void) {
+// 	dmb();
+// 	dsb();
+// }
 
 void uart_init(void) {
     // Set GPIO (p.102)
@@ -50,7 +50,8 @@ void uart_init(void) {
     PUT32(AUX_MU_MCR_REG, 0);           // p.14
     PUT32(AUX_MU_LSR_REG, 0b01000000);  // p.15
     PUT32(AUX_MU_MSR_REG, 0b00100000);  // p.15
-    PUT32(AUX_MU_BAUD_REG, 270);        // p.19, baudrate 115200, formula p.11
+    //PUT32(AUX_MU_BAUD_REG, 270);      // p.19, baudrate 115200, formula p.11
+    PUT32(AUX_MU_BAUD_REG, 3254);       // p.19, baudrate 9600, formula p.11
 
     // Set TX, RX
     PUT32(AUX_MU_CNTL_REG, 0b11);
