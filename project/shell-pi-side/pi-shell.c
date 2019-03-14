@@ -1,10 +1,7 @@
 #include "rpi.h"
 #include "pi-shell.h"
+#include "sw-uart/sw-uart.h"
 
-#define TX_SOFT 5
-#define RX_SOFT 6
-#define HIGH 1
-#define LOW 0
 static const char pi_done[] = "PI REBOOT!!!";
 
 // read characters until we hit a newline.
@@ -27,16 +24,16 @@ void notmain() {
 	while((n = readline(buf, sizeof buf))) {
 		if (strncmp(buf, "echo ", 4) == 0) {
 			printk("%s\n", buf);
-        } else if (strncmp(buf, "reboot", 6) == 0) {
-            printk("%s\n", pi_done);
-	        delay_ms(100);  
-            clean_reboot();
-        } else if (strncmp(buf, "run", 3) == 0) {
-            unsigned addr = load_code();
-            BRANCHTO(addr);
+		} else if (strncmp(buf, "reboot", 6) == 0) {
+			printk("%s\n", pi_done);
+			delay_ms(100);  
+			clean_reboot();
+		} else if (strncmp(buf, "run", 3) == 0) {
+			unsigned addr = load_code();
+			BRANCHTO(addr);
 		} else if (strncmp(buf, "esp", 3) == 0) {
-            printk("esp\n");
-        }
+			sw_uart_init();
+		}
 	}
 	clean_reboot();
 }

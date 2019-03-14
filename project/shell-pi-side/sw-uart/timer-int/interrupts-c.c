@@ -11,17 +11,17 @@
  * and end of the table and its embedded constants.
  */
 void install_int_handlers(void) {
-        unsigned *dst = (void*)RPI_VECTOR_START,
-                 *src = &_interrupt_table,
-                 n = &_interrupt_table_end - src;
-        for(int i = 0; i < n; i++)
-                dst[i] = src[i];
+	unsigned *dst = (void*)RPI_VECTOR_START,
+					 *src = &_interrupt_table,
+					 n = &_interrupt_table_end - src;
+	for(int i = 0; i < n; i++)
+		dst[i] = src[i];
 }
 
 void interrupt_vector(unsigned pc) {
 	// defined by the client.
 	void int_handler(unsigned pc);
-  	int_handler(pc);
+  int_handler(pc);
 }
 
 #define UNHANDLED(msg,r) \

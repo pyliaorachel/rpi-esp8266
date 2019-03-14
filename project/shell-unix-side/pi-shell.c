@@ -57,6 +57,7 @@ int pi_readline(int fd, char *buf, unsigned sz) {
             note("assuming: pi connection closed.  cleaning up\n");
                 exit(0);
         }
+        note("<%d> <%c> <%x>\n", buf[i], buf[i], buf[i]);
 		if(buf[i] == '\n') {
 			buf[i] = 0;
 			return 1;
@@ -177,8 +178,12 @@ int esp(int pi_fd, char *argv[], int nargs) {
 
 	// 	esp_note("> ");
 	// }
+    // Read from pi
+    while (pi_readline(pi_fd, buf, PI_BUF_SIZE)) {
+        note("pi echoed: <%s>\n", buf);
+    }
 
-    return 0;
+    return 1;
 }
 
 static int do_esp(int pi_fd, char *argv[], int nargs) {

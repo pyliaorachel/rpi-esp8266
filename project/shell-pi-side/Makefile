@@ -2,13 +2,15 @@
 # 	http://scottmcpeak.com/autodepend/autodepend.html
 
 NAME=pi-shell
-TI=  timer-int
-GI= gpio-int
-OBJS = $(NAME).o bootloader.o\
-	$(GI)/gpio-int.o\
-        $(TI)/interrupts-asm.o  \
-         $(TI)/interrupts-c.o   \
-	$(LIBPI_PATH)/cs140e-start.o
+TI= sw-uart/timer-int
+GI= sw-uart/gpio-int
+SU = sw-uart
+OBJS = $(NAME).o bootloader.o				\
+			 $(GI)/gpio-int.o							\
+			 $(TI)/interrupts-asm.o  			\
+			 $(TI)/interrupts-c.o   			\
+			 $(SU)/sw-uart.o							\
+			 $(LIBPI_PATH)/cs140e-start.o
 
 ifndef LIBPI_PATH
 $(error LIBPI_PATH is not set: this should contain the absolute path to where this directory is.  Define it in your shell's initialiation.  For example, .tcshrc for tcsh or .bashrc for bash)

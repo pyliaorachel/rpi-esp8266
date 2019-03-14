@@ -1,15 +1,13 @@
-/* make GPIO pin generate an interrupt when it goes low to high.  */
 #include "gpio-int.h"
 
-// client has to define this.
-void int_handler(unsigned pc) {
-  // detect (1) if the gpio event triggered and (2) clear it.
-  printk("!!!! In the handler!!!\n");
-  if (gpio_event_detected(pin)) {
-    printk("!!!Detected!!!!\n");
-    gpio_event_clear(pin);
-  }
-}
+
+// void int_handler(unsigned pc) {
+//   printk("!!!! In the handler!!!\n");
+//   if (gpio_event_detected(pin)) {
+//     printk("!!!Detected!!!!\n");
+//     gpio_event_clear(pin);
+//   }
+// }
 
 void OR_IN32(unsigned addr, unsigned val) {
   PUT32(addr, GET32(addr) | val);
@@ -37,7 +35,14 @@ int gpio_int_rising_edge(unsigned pin) {
   return 0;
 }
 
-void gpio_int_init(const int pin) {
+int gpio_int_falling_edge(unsigned pin) {
+  if(pin >= 32)
+    return -1;
+  PUT32(GPAFEN0, 1 << pin);
+  return 0;
+}
+
+void gpio_int_init(const int pin, const int edge_direction) {
   printk("about to install handlers\n");
   install_int_handlers();
   
@@ -53,19 +58,20 @@ void gpio_int_init(const int pin) {
   // Bit 52 is in the second register, so subtract 32 for index                                                              
   PUT32(INTERRUPT_ENABLE_2, (1 << (52 - 32)));
   dev_barrier();
-  
-  
+
   printk("setting up GPIO interrupts for pin: %d\n", pin);
   gpio_set_input(pin);
-  gpio_set_pulldown(pin);
   
-  
-  gpio_int_rising_edge(pin);
-  // gpio_int_high(pin);
-  
+  if (edge_direction == RISING_EDGE) {
+    gpio_set_pulldown(pin);
+    gpio_int_rising_edge(pin);
+  } else {
+    gpio_set_pullup(pin);
+    gpio_int_falling_edge(pin);
+  }
+
   printk("gonna enable ints globally!\n");
-  
-  
+
   system_enable_interrupts();
   printk("enabled!\n");
 }
