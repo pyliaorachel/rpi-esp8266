@@ -1,6 +1,5 @@
 #include "rpi.h"
 #include "pi-shell.h"
-#include "sw-uart/sw-uart.h"
 
 static const char pi_done[] = "PI REBOOT!!!";
 

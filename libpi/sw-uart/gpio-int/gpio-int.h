@@ -1,6 +1,5 @@
 #include "rpi.h"
-#include "rpi-armtimer.h"
-#include "rpi-interrupts.h"
+#include "../timer-int/rpi-interrupts.h"
 
 #define RISING_EDGE 0
 #define FALLING_EDGE 1

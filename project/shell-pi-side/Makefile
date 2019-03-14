@@ -2,14 +2,7 @@
 # 	http://scottmcpeak.com/autodepend/autodepend.html
 
 NAME=pi-shell
-TI= sw-uart/timer-int
-GI= sw-uart/gpio-int
-SU = sw-uart
 OBJS = $(NAME).o bootloader.o				\
-			 $(GI)/gpio-int.o							\
-			 $(TI)/interrupts-asm.o  			\
-			 $(TI)/interrupts-c.o   			\
-			 $(SU)/sw-uart.o							\
 			 $(LIBPI_PATH)/cs140e-start.o
 
 ifndef LIBPI_PATH
@@ -19,7 +12,6 @@ endif
 # useful set of defines.
 include $(LIBPI_PATH)/includes.mk
 
-CFLAGS += -I$(TI)
 CFLAGS += -Wno-unused-function
 
 all: libpi $(NAME).bin 

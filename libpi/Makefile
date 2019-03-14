@@ -14,18 +14,22 @@ START= cs140e-start.o
 # add your new files here.
 # e.g., my-uart.c
 SRC = 	cs140e-printf.c  	\
-	cs140e-reboot.c  	\
-	cs140e-timer.c 		\
+	cs140e-reboot.c  				\
+	cs140e-timer.c 					\
 	cs140e-mem-barrier.s  	\
-	cs140e-stdlib.c		\
-	cs140e-cstart.c		\
-	cs140e-rand.c		\
-	cs140e-kmalloc.c		\
-	my-gpio.c		\
-	cs140e-pwm.c		\
-	cs140e-cache.c		\
-	cs140e-asm.s		\
-	cs140e-put-get.s
+	cs140e-stdlib.c					\
+	cs140e-cstart.c					\
+	cs140e-rand.c						\
+	cs140e-kmalloc.c				\
+	my-gpio.c								\
+	cs140e-pwm.c						\
+	cs140e-cache.c					\
+	cs140e-asm.s						\
+	cs140e-put-get.s 				\
+	sw-uart/timer-int/interrupts-c.c 		\
+	sw-uart/timer-int/interrupts-asm.s	\
+	sw-uart/gpio-int/gpio-int.c 				\
+	sw-uart/sw-uart.c
 
 TARGET = libpi.a
 

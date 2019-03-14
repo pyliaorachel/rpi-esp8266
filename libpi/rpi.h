@@ -148,5 +148,6 @@ unsigned rpi_get_cpsr(void);
 
 #include "gpio.h"
 #include "assert.h"
+#include "sw-uart/sw-uart.h"
 
 #endif
