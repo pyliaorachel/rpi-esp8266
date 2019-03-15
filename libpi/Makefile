@@ -25,6 +25,7 @@ SRC = 	cs140e-printf.c 	\
 	cs140e-pwm.c						\
 	cs140e-cache.c					\
 	cs140e-put-get.s 				\
+	cs140e-asm.s	\
 	my-uart.c								\
 	sw-uart/timer-int/interrupts-c.c 		\
 	sw-uart/timer-int/interrupts-asm.s	\

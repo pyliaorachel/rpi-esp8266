@@ -383,16 +383,16 @@ Disassembly of section .text:
 
 Disassembly of section .bss:
 
-00000000 <buf.3937>:
+00000000 <buf.3939>:
 	...
 
 Disassembly of section .rodata:
 
-00000000 <__FUNCTION__.3895>:
+00000000 <__FUNCTION__.3897>:
    0:	74696d65 	strbtvc	r6, [r9], #-3429	; 0xd65
    4:	00000000 	andeq	r0, r0, r0
 
-00000008 <__FUNCTION__.3910>:
+00000008 <__FUNCTION__.3912>:
    8:	705f6176 	subsvc	r6, pc, r6, ror r1	; <UNPREDICTABLE>
    c:	746e6972 	strbtvc	r6, [lr], #-2418	; 0x972
   10:	0000006b 	andeq	r0, r0, fp, rrx
@@ -550,7 +550,7 @@ Disassembly of section .text:
 
 Disassembly of section .rodata:
 
-00000000 <__FUNCTION__.3846>:
+00000000 <__FUNCTION__.3848>:
    0:	5f697072 	svcpl	0x00697072
    4:	6f626572 	svcvs	0x00626572
    8:	0000746f 	andeq	r7, r0, pc, ror #8
@@ -1027,7 +1027,7 @@ Disassembly of section .text:
 
 Disassembly of section .rodata:
 
-00000000 <__FUNCTION__.3860>:
+00000000 <__FUNCTION__.3862>:
    0:	6f697067 	svcvs	0x00697067
    4:	6165725f 	cmnvs	r5, pc, asr r2
    8:	00000064 	andeq	r0, r0, r4, rrx
@@ -1185,17 +1185,17 @@ Disassembly of section .text:
 
 Disassembly of section .rodata:
 
-00000000 <__FUNCTION__.3863>:
+00000000 <__FUNCTION__.3865>:
    0:	5f6d7770 	svcpl	0x006d7770
    4:	706d6f63 	rsbvc	r6, sp, r3, ror #30
    8:	00657475 	rsbeq	r7, r5, r5, ror r4
 
-0000000c <__FUNCTION__.3855>:
+0000000c <__FUNCTION__.3857>:
    c:	5f746e69 	svcpl	0x00746e69
   10:	656e696c 	strbvs	r6, [lr, #-2412]!	; 0x96c
   14:	00000000 	andeq	r0, r0, r0
 
-00000018 <__FUNCTION__.3870>:
+00000018 <__FUNCTION__.3872>:
   18:	5f6d7770 	svcpl	0x006d7770
   1c:	6e697270 	mcrvs	2, 3, r7, cr9, cr0, {3}
   20:	00000074 	andeq	r0, r0, r4, ror r0
@@ -1364,6 +1364,27 @@ Disassembly of section .ARM.attributes:
    8:	01006962 	tsteq	r0, r2, ror #18
    c:	00000012 	andeq	r0, r0, r2, lsl r0
   10:	4b5a3605 	blmi	168d82c <dummy+0x168d7f4>
+  14:	08070600 	stmdaeq	r7, {r9, sl}
+  18:	44010901 	strmi	r0, [r1], #-2305	; 0x901
+  1c:	Address 0x000000000000001c is out of bounds.
+
+
+cs140e-asm.o:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <BRANCHTO>:
+   0:	e12fff10 	bx	r0
+
+Disassembly of section .ARM.attributes:
+
+00000000 <.ARM.attributes>:
+   0:	00001c41 	andeq	r1, r0, r1, asr #24
+   4:	61656100 	cmnvs	r5, r0, lsl #2
+   8:	01006962 	tsteq	r0, r2, ror #18
+   c:	00000012 	andeq	r0, r0, r2, lsl r0
+  10:	4b5a3605 	blmi	168d82c <BRANCHTO+0x168d82c>
   14:	08070600 	stmdaeq	r7, {r9, sl}
   18:	44010901 	strmi	r0, [r1], #-2305	; 0x901
   1c:	Address 0x000000000000001c is out of bounds.
@@ -1620,7 +1641,7 @@ Disassembly of section .text:
 
 Disassembly of section .rodata:
 
-00000000 <__FUNCTION__.3879>:
+00000000 <__FUNCTION__.3881>:
    0:	74736166 	ldrbtvc	r6, [r3], #-358	; 0x166
    4:	746e695f 	strbtvc	r6, [lr], #-2399	; 0x95f
    8:	75727265 	ldrbvc	r7, [r2, #-613]!	; 0x265
@@ -1628,7 +1649,7 @@ Disassembly of section .rodata:
   10:	6f746365 	svcvs	0x00746365
   14:	00000072 	andeq	r0, r0, r2, ror r0
 
-00000018 <__FUNCTION__.3883>:
+00000018 <__FUNCTION__.3885>:
   18:	74666f73 	strbtvc	r6, [r6], #-3955	; 0xf73
   1c:	65726177 	ldrbvs	r6, [r2, #-375]!	; 0x177
   20:	746e695f 	strbtvc	r6, [lr], #-2399	; 0x95f
@@ -1637,13 +1658,13 @@ Disassembly of section .rodata:
   2c:	6f746365 	svcvs	0x00746365
   30:	00000072 	andeq	r0, r0, r2, ror r0
 
-00000034 <__FUNCTION__.3887>:
+00000034 <__FUNCTION__.3889>:
   34:	65736572 	ldrbvs	r6, [r3, #-1394]!	; 0x572
   38:	65765f74 	ldrbvs	r5, [r6, #-3956]!	; 0xf74
   3c:	726f7463 	rsbvc	r7, pc, #1660944384	; 0x63000000
   40:	00000000 	andeq	r0, r0, r0
 
-00000044 <__FUNCTION__.3891>:
+00000044 <__FUNCTION__.3893>:
   44:	65646e75 	strbvs	r6, [r4, #-3701]!	; 0xe75
   48:	656e6966 	strbvs	r6, [lr, #-2406]!	; 0x966
   4c:	6e695f64 	cdpvs	15, 6, cr5, cr9, cr4, {3}
@@ -1653,7 +1674,7 @@ Disassembly of section .rodata:
   5c:	726f7463 	rsbvc	r7, pc, #1660944384	; 0x63000000
   60:	00000000 	andeq	r0, r0, r0
 
-00000064 <__FUNCTION__.3895>:
+00000064 <__FUNCTION__.3897>:
   64:	66657270 			; <UNDEFINED> instruction: 0x66657270
   68:	68637465 	stmdavs	r3!, {r0, r2, r5, r6, sl, ip, sp, lr}^
   6c:	6f62615f 	svcvs	0x0062615f
@@ -1661,7 +1682,7 @@ Disassembly of section .rodata:
   74:	6f746365 	svcvs	0x00746365
   78:	00000072 	andeq	r0, r0, r2, ror r0
 
-0000007c <__FUNCTION__.3899>:
+0000007c <__FUNCTION__.3901>:
   7c:	61746164 	cmnvs	r4, r4, ror #2
   80:	6f62615f 	svcvs	0x0062615f
   84:	765f7472 			; <UNDEFINED> instruction: 0x765f7472
@@ -2573,16 +2594,16 @@ Disassembly of section .text:
 
 Disassembly of section .bss:
 
-00000000 <buf.3937>:
+00000000 <buf.3939>:
 	...
 
 Disassembly of section .rodata:
 
-00000000 <__FUNCTION__.3895>:
+00000000 <__FUNCTION__.3897>:
    0:	74696d65 	strbtvc	r6, [r9], #-3429	; 0xd65
    4:	00000000 	andeq	r0, r0, r0
 
-00000008 <__FUNCTION__.3910>:
+00000008 <__FUNCTION__.3912>:
    8:	765f7773 			; <UNDEFINED> instruction: 0x765f7773
    c:	72705f61 	rsbsvc	r5, r0, #388	; 0x184
   10:	6b746e69 	blvs	1d1b9bc <sw_panic+0x1d1b480>

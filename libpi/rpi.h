@@ -67,7 +67,7 @@ void rpi_reboot(void) __attribute__((noreturn));
 void clean_reboot(void) __attribute__((noreturn));
 
 // set pc value to <addr>
-void BRANCHTO( unsigned addr);
+void BRANCHTO(unsigned addr);
 
 // a no-op routine called to defeat the compiler.
 void dummy(unsigned);
@@ -121,6 +121,9 @@ unsigned short get16(const volatile void *addr);
 // *(unsigned char *)addr
 unsigned char GET8(unsigned addr);
 unsigned char get8(const volatile void *addr);
+
+// jump to <addr>
+void BRANCHTO(unsigned addr);
 
 // cache enable
 void enable_cache(void) ;
