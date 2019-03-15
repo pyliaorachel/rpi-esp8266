@@ -95,7 +95,6 @@ void get_binary(unsigned * base, unsigned nbytes) {
 //
 void notmain(void) {
     sw_uart_init();
-
 	// XXX: cs107e has this delay; doesn't seem to be required if 
 	// you drain the uart.
     delay_ms(500);
@@ -126,9 +125,9 @@ void notmain(void) {
     // Verify checksum; send ACK or error
     unsigned new_checksum = crc32((unsigned char *) ARMBASE, n);
     if (checksum != new_checksum)
-        die(NAK);
+    die(NAK);
     put_uint_robust(ACK);
-
+    
 	// XXX: appears we need these delays or the unix side gets confused.
 	// I believe it's b/c the code we call re-initializes the uart; could
 	// disable that to make it a bit more clean.

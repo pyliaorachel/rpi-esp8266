@@ -43,8 +43,8 @@ void notmain() {
 			delay_ms(100);  
 			clean_reboot();
 		} else if (strncmp(buf, "run", 3) == 0) {
-			unsigned addr = load_code();
-			BRANCHTO(addr);
+		  unsigned addr = load_code();
+		  BRANCHTO(addr);
 		} else if (strncmp(buf, "esp", 3) == 0) {
 			while (c = sw_uart_getc()); // ESP should reset here
 			printk("Welcome!\n");

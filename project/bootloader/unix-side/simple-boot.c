@@ -114,18 +114,22 @@ void simple_boot(int fd, const unsigned char * buf, unsigned n) {
     put_uint_robust(fd, n);
     put_uint_robust(fd, checksum);
     expect("SOH error", fd, SOH);
+    fprintf(stderr, "got SOH\n");
     expect("nbytes error", fd, crc32(&n, sizeof(n)));
+    fprintf(stderr, "got nbytes\n");
     expect("checksum error", fd, checksum);
+    fprintf(stderr, "got checksum\n");
 
     // Send ACK
     put_uint_robust(fd, ACK);
-
+    fprintf(stderr, "sent ack\n");
     // Send program binary
     send_binary(fd, (unsigned *) buf, n);
-
+    fprintf(stderr, "sent program binary\n");
     // Send EOT
     put_uint_robust(fd, EOT);
-
+    fprintf(stderr, "sent eot\n");
     // Get ACK
     expect("ACK error", fd, ACK);
+    fprintf(stderr, "got ack\n");
 }

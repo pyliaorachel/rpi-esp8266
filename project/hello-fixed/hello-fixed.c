@@ -6,25 +6,25 @@
 void notmain(void) {
 	// NB: we can't do this b/c the shell already initialized and resetting
 	// uart may reset connection to Unix.
-	// uart_init();
+  //sw_uart_init();
 
 	// if not working, try just printing characters.
-#if 0
-	uart_putc('h');
-	uart_putc('e');
-	uart_putc('l');
-	uart_putc('l');
-	uart_putc('o');
+  #if 0
+	sw_uart_putc('h');
+	sw_uart_putc('e');
+	sw_uart_putc('l');
+	sw_uart_putc('l');
+	sw_uart_putc('o');
 
-	uart_putc(' ');
+	sw_uart_putc(' ');
 
-	uart_putc('w');
-	uart_putc('o');
-	uart_putc('r');
-	uart_putc('l');
-	uart_putc('d');
+	sw_uart_putc('w');
+	sw_uart_putc('o');
+	sw_uart_putc('r');
+	sw_uart_putc('l');
+	sw_uart_putc('d');
 
-	uart_putc('\n');
+	sw_uart_putc('\n');
 #endif
 
 	printk("hello world\n");

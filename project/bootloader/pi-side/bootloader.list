@@ -2025,7 +2025,7 @@ Disassembly of section .rodata:
   401c34:	5a05df1b 	bpl	5798a8 <__bss_end__+0x177518>
   401c38:	2d02ef8d 	stccs	15, cr14, [r2, #-564]	; 0xfffffdcc
 
-00401c3c <__FUNCTION__.3838>:
+00401c3c <__FUNCTION__.3846>:
   401c3c:	5f697072 	svcpl	0x00697072
   401c40:	6f626572 	svcvs	0x00626572
   401c44:	0000746f 	andeq	r7, r0, pc, ror #8
@@ -2051,11 +2051,11 @@ Disassembly of section .rodata:
   401c94:	2020007c 	eorcs	r0, r0, ip, ror r0
   401c98:	20200088 	eorcs	r0, r0, r8, lsl #1
 
-00401c9c <__FUNCTION__.3887>:
+00401c9c <__FUNCTION__.3895>:
   401c9c:	74696d65 	strbtvc	r6, [r9], #-3429	; 0xd65
   401ca0:	00000000 	andeq	r0, r0, r0
 
-00401ca4 <__FUNCTION__.3902>:
+00401ca4 <__FUNCTION__.3910>:
   401ca4:	705f6176 	subsvc	r6, pc, r6, ror r1	; <UNPREDICTABLE>
   401ca8:	746e6972 	strbtvc	r6, [lr], #-2418	; 0x972
   401cac:	0000006b 	andeq	r0, r0, fp, rrx
@@ -2089,7 +2089,7 @@ Disassembly of section .rodata:
   401d1c:	3a73253a 	bcc	20cb20c <__bss_end__+0x1cc8e7c>
   401d20:	663a6425 	ldrtvs	r6, [sl], -r5, lsr #8
   401d24:	74616f6c 	strbtvc	r6, [r1], #-3948	; 0xf6c
-  401d28:	746f6e20 	strbtvc	r6, [pc], #-3616	; 401d30 <__FUNCTION__.3902+0x8c>
+  401d28:	746f6e20 	strbtvc	r6, [pc], #-3616	; 401d30 <__FUNCTION__.3910+0x8c>
   401d2c:	616e6520 	cmnvs	lr, r0, lsr #10
   401d30:	64656c62 	strbtvs	r6, [r5], #-3170	; 0xc62
   401d34:	0a212121 	beq	c4a1c0 <__bss_end__+0x847e30>
@@ -2120,7 +2120,7 @@ Disassembly of section .rodata:
   401d98:	7325203a 	teqvc	r5, #58	; 0x3a
   401d9c:	0000000a 	andeq	r0, r0, sl
 
-00401da0 <__FUNCTION__.3852>:
+00401da0 <__FUNCTION__.3860>:
   401da0:	6f697067 	svcvs	0x00697067
   401da4:	6165725f 	cmnvs	r5, pc, asr r2
   401da8:	00000064 	andeq	r0, r0, r4, rrx
@@ -2163,7 +2163,7 @@ Disassembly of section .rodata:
   401e3c:	2164656c 	cmncs	r4, ip, ror #10
   401e40:	0000000a 	andeq	r0, r0, sl
 
-00401e44 <__FUNCTION__.3871>:
+00401e44 <__FUNCTION__.3879>:
   401e44:	74736166 	ldrbtvc	r6, [r3], #-358	; 0x166
   401e48:	746e695f 	strbtvc	r6, [lr], #-2399	; 0x95f
   401e4c:	75727265 	ldrbvc	r7, [r2, #-613]!	; 0x265
@@ -2171,7 +2171,7 @@ Disassembly of section .rodata:
   401e54:	6f746365 	svcvs	0x00746365
   401e58:	00000072 	andeq	r0, r0, r2, ror r0
 
-00401e5c <__FUNCTION__.3875>:
+00401e5c <__FUNCTION__.3883>:
   401e5c:	74666f73 	strbtvc	r6, [r6], #-3955	; 0xf73
   401e60:	65726177 	ldrbvs	r6, [r2, #-375]!	; 0x177
   401e64:	746e695f 	strbtvc	r6, [lr], #-2399	; 0x95f
@@ -2180,13 +2180,13 @@ Disassembly of section .rodata:
   401e70:	6f746365 	svcvs	0x00746365
   401e74:	00000072 	andeq	r0, r0, r2, ror r0
 
-00401e78 <__FUNCTION__.3879>:
+00401e78 <__FUNCTION__.3887>:
   401e78:	65736572 	ldrbvs	r6, [r3, #-1394]!	; 0x572
   401e7c:	65765f74 	ldrbvs	r5, [r6, #-3956]!	; 0xf74
   401e80:	726f7463 	rsbvc	r7, pc, #1660944384	; 0x63000000
   401e84:	00000000 	andeq	r0, r0, r0
 
-00401e88 <__FUNCTION__.3883>:
+00401e88 <__FUNCTION__.3891>:
   401e88:	65646e75 	strbvs	r6, [r4, #-3701]!	; 0xe75
   401e8c:	656e6966 	strbvs	r6, [lr, #-2406]!	; 0x966
   401e90:	6e695f64 	cdpvs	15, 6, cr5, cr9, cr4, {3}
@@ -2196,7 +2196,7 @@ Disassembly of section .rodata:
   401ea0:	726f7463 	rsbvc	r7, pc, #1660944384	; 0x63000000
   401ea4:	00000000 	andeq	r0, r0, r0
 
-00401ea8 <__FUNCTION__.3887>:
+00401ea8 <__FUNCTION__.3895>:
   401ea8:	66657270 			; <UNDEFINED> instruction: 0x66657270
   401eac:	68637465 	stmdavs	r3!, {r0, r2, r5, r6, sl, ip, sp, lr}^
   401eb0:	6f62615f 	svcvs	0x0062615f
@@ -2204,7 +2204,7 @@ Disassembly of section .rodata:
   401eb8:	6f746365 	svcvs	0x00746365
   401ebc:	00000072 	andeq	r0, r0, r2, ror r0
 
-00401ec0 <__FUNCTION__.3891>:
+00401ec0 <__FUNCTION__.3899>:
   401ec0:	61746164 	cmnvs	r4, r4, ror #2
   401ec4:	6f62615f 	svcvs	0x0062615f
   401ec8:	765f7472 			; <UNDEFINED> instruction: 0x765f7472
