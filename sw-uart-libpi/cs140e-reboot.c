@@ -47,7 +47,7 @@ void rpi_reboot(void) {
 
 // print out message so bootloader exits
 void clean_reboot(void) {
-  //putk("DONE!!!\n");
+  putk("DONE!!!\n");
   delay_ms(50); 		// give a chance to get flushed
   rpi_reboot();
 }

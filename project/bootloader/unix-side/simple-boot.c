@@ -88,7 +88,7 @@ void expect(const char *msg, int fd, unsigned v) {
     unsigned x = get_uint_robust(fd);
 	if(x != v) {
         put_uint_robust(fd, NAK);
-		panic("%s: expected %x, got %x\n", msg, v,x);
+		panic("%s: expected %x, got %x\n", msg, v, x);
     }
 }
 
@@ -97,6 +97,12 @@ void send_binary(int fd, unsigned * buf, unsigned nbytes) {
     while (nbytes > 0) {
         put_uint_robust(fd, *buf++);
         nbytes -= sizeof(unsigned);
+        // check every 2^8 bytes the program have been sent correctly
+        // this avoids timeout a bit
+        if ((nbytes & 0xff) == 0) {
+            expect("ACK failed during send binary", fd, ACK);
+            fprintf(stderr, "."); // print progress
+        }
     }
 }
 
@@ -114,22 +120,19 @@ void simple_boot(int fd, const unsigned char * buf, unsigned n) {
     put_uint_robust(fd, n);
     put_uint_robust(fd, checksum);
     expect("SOH error", fd, SOH);
-    fprintf(stderr, "got SOH\n");
     expect("nbytes error", fd, crc32(&n, sizeof(n)));
-    fprintf(stderr, "got nbytes\n");
     expect("checksum error", fd, checksum);
-    fprintf(stderr, "got checksum\n");
 
     // Send ACK
     put_uint_robust(fd, ACK);
-    fprintf(stderr, "sent ack\n");
+
     // Send program binary
+    fprintf(stderr, "Sending program binary");
     send_binary(fd, (unsigned *) buf, n);
-    fprintf(stderr, "sent program binary\n");
+    fprintf(stderr, "Done.\n");
+
     // Send EOT
     put_uint_robust(fd, EOT);
-    fprintf(stderr, "sent eot\n");
     // Get ACK
     expect("ACK error", fd, ACK);
-    fprintf(stderr, "got ack\n");
 }

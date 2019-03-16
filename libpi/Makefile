@@ -30,8 +30,7 @@ SRC = 	cs140e-printf.c 	\
 	sw-uart/timer-int/interrupts-c.c 		\
 	sw-uart/timer-int/interrupts-asm.s	\
 	sw-uart/gpio-int/gpio-int.c 				\
-	sw-uart/sw-uart.c \
-	cs140e-sw-uart-printf.c
+	sw-uart/sw-uart.c
 
 # defines CC, etc.
 include includes.mk

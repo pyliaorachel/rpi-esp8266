@@ -80,40 +80,57 @@ static int done(unsigned char *s) {
 
 // read and echo the characters from the tty until it closes (pi rebooted)
 // or we see a string indicating a clean shutdown.
+static unsigned char get_byte(int fd) {
+	unsigned char b;
+	int n;
+	if((n = read(fd, &b, 1)) != 1)
+		panic("read failed in get_byte: expected 1 byte, got %d\n",n);
+	return b;
+}
+
+unsigned this_get_uint(int fd) {
+    unsigned u = get_byte(fd);
+    u |= get_byte(fd) << 8;
+    u |= get_byte(fd) << 16;
+    u |= get_byte(fd) << 24;
+    trace_read32(u);
+    return u;
+}
+
 static void echo(int fd, const char *portname) {
     while(1) {
-        unsigned char buf [4096];
-        int n = read(fd, buf, sizeof buf - 1);
-        if(n>0)
-            trace_read_bytes(buf, n);
-            if(!n) {
-                struct stat s;
-                // change this to fstat.
-                // if(stat(portname, &s) < 0) {
-                if(fstat(fd, &s) < 0) {
-                    fprintf(stderr, "read EOF\n");
-                    perror("fstat");
-                    fprintf(stderr, 
-                        "pi connection closed.  cleaning up\n");
-                    exit(0);
-                }
-                // gonna have to override this if you want to test.
-                usleep(1000);
-            } else if(n < 0) {
-                fprintf(stderr, "ERROR: got %s res=%d\n", strerror(n),n);
-                fprintf(stderr, "pi connection closed.  cleaning up\n");
-                exit(0);
-            } else {
-                buf[n] = 0;
-                // XXX printf does not flush until newline!
-                fprintf(stderr, "%s", buf);
+		unsigned char buf [4096];
+		int n = read(fd, buf, sizeof buf - 1);
+		if (n > 0)
+			trace_read_bytes(buf, n);
+		if (!n) {
+			struct stat s;
+			// change this to fstat.
+			// if(stat(portname, &s) < 0) {
+			if (fstat(fd, &s) < 0) {
+				fprintf(stderr, "read EOF\n");
+				perror("fstat");
+				fprintf(stderr, 
+					"pi connection closed.  cleaning up\n");
+				exit(0);
+			}
+			// gonna have to override this if you want to test.
+			usleep(1000);
+		} else if (n < 0) {
+			fprintf(stderr, "ERROR: got %s res=%d\n", strerror(n),n);
+			fprintf(stderr, "pi connection closed.  cleaning up\n");
+			exit(0);
+		} else {
+			buf[n] = 0;
+			// XXX printf does not flush until newline!
+			fprintf(stderr, "%s", buf);
 
-            if(done(buf)) {
-                fprintf(stderr, "\nSaw done\n");
-                fprintf(stderr, "\nbootloader: pi exited.  cleaning up\n");
-                exit(0);
-            }
-        }
+			if (done(buf)) {
+				fprintf(stderr, "\nSaw done\n");
+				fprintf(stderr, "\nbootloader: pi exited.  cleaning up\n");
+				exit(0);
+			}
+		}
 	}
 }
 

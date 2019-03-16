@@ -80,6 +80,9 @@ void get_binary(unsigned * base, unsigned nbytes) {
         *base = get_uint_robust();
         base++;
         nloaded += sizeof(unsigned);
+        // check every 2^8 bytes the program have been received correctly
+        if (((nbytes - nloaded) & 0xff) == 0)
+            put_uint_robust(ACK);
     }
 }
 
@@ -125,14 +128,14 @@ void notmain(void) {
     // Verify checksum; send ACK or error
     unsigned new_checksum = crc32((unsigned char *) ARMBASE, n);
     if (checksum != new_checksum)
-    die(NAK);
+        die(NAK);
     put_uint_robust(ACK);
     
     // XXX: appears we need these delays or the unix side gets confused.
     // I believe it's b/c the code we call re-initializes the uart; could
     // disable that to make it a bit more clean.
-    delay_ms(500);
-    
+    delay_ms(2000);
+
     // Run what client sent
     BRANCHTO(ARMBASE);
     

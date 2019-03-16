@@ -542,9 +542,12 @@ Disassembly of section .text:
 
 000000a4 <clean_reboot>:
   a4:	e92d4008 	push	{r3, lr}
-  a8:	e3a00032 	mov	r0, #50	; 0x32
-  ac:	ebfffffe 	bl	0 <delay_ms>
-  b0:	ebfffffe 	bl	2c <rpi_reboot>
+  a8:	e59f000c 	ldr	r0, [pc, #12]	; bc <clean_reboot+0x18>
+  ac:	ebfffffe 	bl	0 <putk>
+  b0:	e3a00032 	mov	r0, #50	; 0x32
+  b4:	ebfffffe 	bl	0 <delay_ms>
+  b8:	ebfffffe 	bl	2c <rpi_reboot>
+  bc:	00000030 	andeq	r0, r0, r0, lsr r0
 
 Disassembly of section .rodata:
 
@@ -568,6 +571,9 @@ Disassembly of section .rodata.str1.4:
   24:	722d6530 	eorvc	r6, sp, #48, 10	; 0xc000000
   28:	6f6f6265 	svcvs	0x006f6265
   2c:	00632e74 	rsbeq	r2, r3, r4, ror lr
+  30:	454e4f44 	strbmi	r4, [lr, #-3908]	; 0xf44
+  34:	0a212121 	beq	8484c0 <clean_reboot+0x84841c>
+  38:	00000000 	andeq	r0, r0, r0
 
 Disassembly of section .comment:
 
