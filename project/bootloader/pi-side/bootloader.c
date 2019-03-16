@@ -128,14 +128,14 @@ void notmain(void) {
     die(NAK);
     put_uint_robust(ACK);
     
-	// XXX: appears we need these delays or the unix side gets confused.
-	// I believe it's b/c the code we call re-initializes the uart; could
-	// disable that to make it a bit more clean.
-	delay_ms(500);
-
-	// Run what client sent
+    // XXX: appears we need these delays or the unix side gets confused.
+    // I believe it's b/c the code we call re-initializes the uart; could
+    // disable that to make it a bit more clean.
+    delay_ms(500);
+    
+    // Run what client sent
     BRANCHTO(ARMBASE);
-
-	// Should not get back here, but just in case.
-	clean_reboot();
+    
+    // Should not get back here, but just in case.
+    clean_reboot();
 }

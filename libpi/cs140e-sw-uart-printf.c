@@ -303,29 +303,3 @@ char * __emit_float(char *num, double d, unsigned width) {
 }
 #endif
 
-#ifdef LINUX
-int main() { 
-	char buf[124], buf2[124], fmt[124];
-
-	int i;
-	my_printf("hello world\n");
-	for(i = 0; i < 10000000; i++) {
-		int x = random() - random();
-		
-		switch(random() % 3) {
-		case 0: snprintf(fmt, 120, "%%%dd", (int)random()%32); break;
-		case 1: snprintf(fmt, 120, "%%%dx", (int)random()%32); break;
-		case 2: snprintf(fmt, 120, "%%%dc", (int)random()%32); break;
-//		case 2: fmt = "%b"; break;
-		}
-		unsigned sz = random () % sizeof buf+1;
-		my_snprintf(buf, sz, fmt,  x);
-		snprintf(buf2, sz, fmt,  x);
-
-		if(strcmp(buf,buf2) != 0)
-			printf("sz=%d x=%x fmt=<%s> us=<%s>  them=<%s>\n", sz, x, fmt, buf, buf2);
-		assert(strcmp(buf,buf2) == 0);
-	}
-	return 0;
-}
-#endif

@@ -145,6 +145,9 @@ unsigned gpio_get_function(unsigned pin);
 int gpio_set_input(unsigned pin);
 int gpio_set_output(unsigned pin);
 
+int gpio_set_on(unsigned pin);
+int gpio_set_off(unsigned pin);
+
 /*
  * Set GPIO pin number `pin` to high (1) or low (0). This
  * function assumes the pin is already in output mode.
