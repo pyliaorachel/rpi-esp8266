@@ -3,9 +3,10 @@
 void notmain() {
 #if 1
   // Program to write character through sw uart does not work.
-  sw_uart_putc('h');
-  return;
-
+  //sw_uart_init();
+  //delay_ms(500);
+  //sw_uart_putc('h');
+  clean_reboot();
 #endif
 #if 0
   // Blink led program.
