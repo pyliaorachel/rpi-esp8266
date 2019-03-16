@@ -1,8 +1,9 @@
 #ifndef __SIMPLE_BOOT_H__
 #define __SIMPLE_BOOT_H__
 
-#define ROBUST_ITER 5
 #define IS_SW_UART 1
+#define ROBUST_ITER 5
+
 void simple_boot(int fd, const unsigned char * buf, unsigned n);
 
 /*
