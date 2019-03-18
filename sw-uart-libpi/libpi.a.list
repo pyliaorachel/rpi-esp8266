@@ -1492,7 +1492,7 @@ Disassembly of section .text:
  138:	e59f002c 	ldr	r0, [pc, #44]	; 16c <uart_getc_timeout+0x5c>
  13c:	ebfffffe 	bl	0 <GET32>
  140:	e5c70000 	strb	r0, [r7]
- 144:	e3a00001 	mov	r0, #1
+ 144:	e3a00000 	mov	r0, #0
  148:	e8bd80f8 	pop	{r3, r4, r5, r6, r7, pc}
  14c:	ebfffffe 	bl	0 <timer_get_time>
  150:	e0650000 	rsb	r0, r5, r0

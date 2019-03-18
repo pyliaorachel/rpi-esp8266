@@ -27,6 +27,7 @@ static const char cmd_done[] = "CMD-DONE";
 // other commands
 const char reboot_cmd[] = "reboot\n";
 const char esp_cmd[] = "esp\n";
+const char esp_end_cmd[] = "exit\n";
 const char esp_welcome_msg[] = "Welcome!";
 const char esp_res_end_msg[] = "END";
 const char esp_shell_end_msg[] = "exit";
@@ -184,10 +185,6 @@ int esp(int pi_fd, char *argv[], int nargs) {
     int pi_done = 0;
     esp_note("> ");
 	while (!done && !pi_done && fgets(buf, sizeof buf, stdin)) {
-        // Check if exit ESP shell
-        if (strncmp(buf, esp_shell_end_msg, strlen(esp_shell_end_msg)) == 0)
-            break;
-
         // Replace \n with \r\n at the end
 		int n = strlen(buf);
         buf[n-1] = '\r';
@@ -197,6 +194,14 @@ int esp(int pi_fd, char *argv[], int nargs) {
 
         // Send to pi
         pi_put(pi_fd, buf);
+
+        // Check if exit ESP shell
+        if (strncmp(buf, esp_shell_end_msg, strlen(esp_shell_end_msg)) == 0) {
+            // Exit message from ESP
+            pi_readline(pi_fd, buf, PI_BUF_SIZE);
+            esp_note("%s\n", buf);
+            break;
+        }
 
         // Read from pi
         while (pi_readline(pi_fd, buf, PI_BUF_SIZE)) {
