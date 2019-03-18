@@ -70,6 +70,21 @@ int uart_getc(void) {
     }
 	return c;
 }
+
+int uart_getc_timeout(char *b, unsigned timeout) {
+    unsigned start = timer_get_time();
+    while (1) {
+        unsigned w = GET32(AUX_MU_STAT_REG); // p.18-19
+        if (w & 0b1) { // symbol available
+            *b = GET32(AUX_MU_IO_REG) & 0b11111111; // p.11, receive data
+            return 1;
+        }
+        if (timer_get_time() - start > timeout)
+            return timer_get_time() - start;
+    }
+	return 0;
+}
+
 void uart_putc(unsigned c) {
     while (1) {
         unsigned w = GET32(AUX_MU_STAT_REG); // p.18-19

@@ -28,18 +28,20 @@ static const char cmd_done[] = "CMD-DONE";
 const char reboot_cmd[] = "reboot\n";
 const char esp_cmd[] = "esp\n";
 const char esp_welcome_msg[] = "Welcome!";
+const char esp_res_end_msg[] = "END";
+const char esp_shell_end_msg[] = "exit";
 
 
 /************************************************************************
  * provided support code.
  */
 static void write_exact(int fd, const void *buf, int nbytes) {
-        int n;
-        if((n = write(fd, buf, nbytes)) < 0) {
-		panic("i/o error writing to pi = <%s>.  Is pi connected?\n", 
-					strerror(errno));
-	}
-        demand(n == nbytes, something is wrong);
+    int n;
+    if((n = write(fd, buf, nbytes)) < 0) {
+        panic("i/o error writing to pi = <%s>.  Is pi connected?\n", 
+            strerror(errno));
+    }
+    demand(n == nbytes, something is wrong);
 }
 
 // write characters to the pi.
@@ -68,19 +70,19 @@ int pi_readline(int fd, char *buf, unsigned sz) {
 
 // read characters from the pi until we see a newline.
 int pi_CRLF_readline(int fd, char *buf, unsigned sz) {
-	for(int i = 0; i < sz; i++) {
-		int n;
+    for(int i = 0; i < sz; i++) {
+        int n;
         if((n = read(fd, &buf[i], 1)) != 1) {
-            note("got %s res=%d, expected 1 byte\n", strerror(n),n);
+            note("got %s res=%d, expected 1 byte\n", strerror(n), n);
             note("assuming: pi connection closed.  cleaning up\n");
-                exit(0);
+            exit(0);
         }
-	if(buf[i] == '\n') {
-	  buf[i] = 0;
-	  return 1;
-	}
-	}
-	panic("too big!\n");
+        if(buf[i] == '\n') {
+            buf[i] = 0;
+            return 1;
+        }
+    }
+    panic("too big!\n");
 }
 
 #define expect_val(fd, v) (expect_val)(fd, v, #v)
@@ -117,13 +119,13 @@ static sig_atomic_t done = 0;
 static void caught_control_c(int sig_no) {
     done = 1;
 }
+
 static void catch_control_c(void) {
     struct sigaction action;
     memset(&action, 0, sizeof(action));
     action.sa_handler = &caught_control_c;
     sigaction(SIGINT, &action, NULL);
 }
-
 
 // fork/exec/wait: use code from homework.
 static int exit_code(int pid) {
@@ -182,6 +184,10 @@ int esp(int pi_fd, char *argv[], int nargs) {
     int pi_done = 0;
     esp_note("> ");
 	while (!done && !pi_done && fgets(buf, sizeof buf, stdin)) {
+        // Check if exit ESP shell
+        if (strncmp(buf, esp_shell_end_msg, strlen(esp_shell_end_msg)) == 0)
+            break;
+
         // Replace \n with \r\n at the end
 		int n = strlen(buf);
         buf[n-1] = '\r';
@@ -192,18 +198,13 @@ int esp(int pi_fd, char *argv[], int nargs) {
         // Send to pi
         pi_put(pi_fd, buf);
 
-        // Check if is end
-        if (strncmp(buf, "exit", 4) == 0)
-            break;
-
         // Read from pi
         while (pi_readline(pi_fd, buf, PI_BUF_SIZE)) {
-	  if (strncmp(buf, "END", 3) == 0)
-	    break;
-	  note("pi echoed: <%s>\n", buf);
+            if (strncmp(buf, esp_res_end_msg, strlen(esp_res_end_msg)) == 0)
+                break;
+            esp_note("pi echoed: <%s>\n", buf);
         }
-        note("finish reading\n");
-		esp_note("> ");
+        esp_note("> ");
     }
 
     return 1;

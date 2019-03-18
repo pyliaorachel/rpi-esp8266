@@ -47,16 +47,17 @@ void delay_ms(unsigned ms) ;
 // a not very good rand()
 unsigned short rpi_rand(void);
 
-// SW UART rpi print
-int sw_printk(const char *format, ...);
-int sw_snprintk(char *buf, size_t n, const char *fmt, ...);
-int sw_putk(const char *msg);
 /*****************************************************************************
  * standard libc like functions for the pi.
  */
 int printk(const char *format, ...);
 int snprintk(char *buf, size_t n, const char *fmt, ...);
 int putk(const char *msg);
+
+// SW UART
+int sw_printk(const char *format, ...);
+int sw_snprintk(char *buf, size_t n, const char *fmt, ...);
+int sw_putk(const char *msg);
 
 int rpi_putchar(int c);
 

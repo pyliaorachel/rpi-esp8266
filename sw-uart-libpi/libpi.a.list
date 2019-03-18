@@ -1478,20 +1478,46 @@ Disassembly of section .text:
  108:	20215064 	eorcs	r5, r1, r4, rrx
  10c:	20215040 	eorcs	r5, r1, r0, asr #32
 
-00000110 <uart_putc>:
- 110:	e92d4038 	push	{r3, r4, r5, lr}
- 114:	e1a05000 	mov	r5, r0
- 118:	e59f401c 	ldr	r4, [pc, #28]	; 13c <uart_putc+0x2c>
- 11c:	e1a00004 	mov	r0, r4
- 120:	ebfffffe 	bl	0 <GET32>
- 124:	e3100002 	tst	r0, #2
- 128:	0afffffb 	beq	11c <uart_putc+0xc>
- 12c:	e59f000c 	ldr	r0, [pc, #12]	; 140 <uart_putc+0x30>
- 130:	e6ef1075 	uxtb	r1, r5
- 134:	ebfffffe 	bl	0 <PUT32>
- 138:	e8bd8038 	pop	{r3, r4, r5, pc}
- 13c:	20215064 	eorcs	r5, r1, r4, rrx
- 140:	20215040 	eorcs	r5, r1, r0, asr #32
+00000110 <uart_getc_timeout>:
+ 110:	e92d40f8 	push	{r3, r4, r5, r6, r7, lr}
+ 114:	e1a07000 	mov	r7, r0
+ 118:	e1a06001 	mov	r6, r1
+ 11c:	ebfffffe 	bl	0 <timer_get_time>
+ 120:	e1a05000 	mov	r5, r0
+ 124:	e59f403c 	ldr	r4, [pc, #60]	; 168 <uart_getc_timeout+0x58>
+ 128:	e1a00004 	mov	r0, r4
+ 12c:	ebfffffe 	bl	0 <GET32>
+ 130:	e3100001 	tst	r0, #1
+ 134:	0a000004 	beq	14c <uart_getc_timeout+0x3c>
+ 138:	e59f002c 	ldr	r0, [pc, #44]	; 16c <uart_getc_timeout+0x5c>
+ 13c:	ebfffffe 	bl	0 <GET32>
+ 140:	e5c70000 	strb	r0, [r7]
+ 144:	e3a00001 	mov	r0, #1
+ 148:	e8bd80f8 	pop	{r3, r4, r5, r6, r7, pc}
+ 14c:	ebfffffe 	bl	0 <timer_get_time>
+ 150:	e0650000 	rsb	r0, r5, r0
+ 154:	e1500006 	cmp	r0, r6
+ 158:	9afffff2 	bls	128 <uart_getc_timeout+0x18>
+ 15c:	ebfffffe 	bl	0 <timer_get_time>
+ 160:	e0650000 	rsb	r0, r5, r0
+ 164:	e8bd80f8 	pop	{r3, r4, r5, r6, r7, pc}
+ 168:	20215064 	eorcs	r5, r1, r4, rrx
+ 16c:	20215040 	eorcs	r5, r1, r0, asr #32
+
+00000170 <uart_putc>:
+ 170:	e92d4038 	push	{r3, r4, r5, lr}
+ 174:	e1a05000 	mov	r5, r0
+ 178:	e59f401c 	ldr	r4, [pc, #28]	; 19c <uart_putc+0x2c>
+ 17c:	e1a00004 	mov	r0, r4
+ 180:	ebfffffe 	bl	0 <GET32>
+ 184:	e3100002 	tst	r0, #2
+ 188:	0afffffb 	beq	17c <uart_putc+0xc>
+ 18c:	e59f000c 	ldr	r0, [pc, #12]	; 1a0 <uart_putc+0x30>
+ 190:	e6ef1075 	uxtb	r1, r5
+ 194:	ebfffffe 	bl	0 <PUT32>
+ 198:	e8bd8038 	pop	{r3, r4, r5, pc}
+ 19c:	20215064 	eorcs	r5, r1, r4, rrx
+ 1a0:	20215040 	eorcs	r5, r1, r0, asr #32
 
 Disassembly of section .comment:
 
