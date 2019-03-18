@@ -22,7 +22,7 @@
 #	include "rpi.h"
 #	include "assert.h"
 
-int rpi_putchar(int c) { uart_putc(c); return c; } 
+int rpi_putchar(int c) { sw_uart_putc(c); return c; } 
 
 // XXX: check sign promotion.
 static int isdigit(int c) { return c >= '0' && c <= '9'; }

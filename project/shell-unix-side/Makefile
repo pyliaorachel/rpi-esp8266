@@ -21,7 +21,7 @@ make-deps:
 	make -C ../shell-pi-side
 
 run:
-	my-install -exec ./pi-shell ../shell-pi-side/pi-shell.bin
+	../bootloader/unix-side/my-install -exec ./pi-shell ../shell-pi-side/pi-shell.bin
 
 $(NAME):  $(OBJS) 
 	$(CC) $(CFLAGS) $^  -o $@ -lm
