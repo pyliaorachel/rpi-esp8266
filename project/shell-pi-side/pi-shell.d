@@ -1,12 +1,10 @@
 pi-shell.o: pi-shell.c \
- /Users/liaopeiyu/Workspace/rpi-esp8266/sw-uart-libpi/rpi.h \
- /Users/liaopeiyu/Workspace/rpi-esp8266/sw-uart-libpi/gpio.h \
- /Users/liaopeiyu/Workspace/rpi-esp8266/sw-uart-libpi/assert.h \
- /Users/liaopeiyu/Workspace/rpi-esp8266/sw-uart-libpi/sw-uart/sw-uart.h \
+ /Users/Stephaniewang/Documents/stanford_courses/CS140E/cs140e-win19/libpi/rpi.h \
+ /Users/Stephaniewang/Documents/stanford_courses/CS140E/cs140e-win19/libpi/gpio.h \
+ /Users/Stephaniewang/Documents/stanford_courses/CS140E/cs140e-win19/libpi/assert.h \
  pi-shell.h
 pi-shell.c:
-/Users/liaopeiyu/Workspace/rpi-esp8266/sw-uart-libpi/rpi.h:
-/Users/liaopeiyu/Workspace/rpi-esp8266/sw-uart-libpi/gpio.h:
-/Users/liaopeiyu/Workspace/rpi-esp8266/sw-uart-libpi/assert.h:
-/Users/liaopeiyu/Workspace/rpi-esp8266/sw-uart-libpi/sw-uart/sw-uart.h:
+/Users/Stephaniewang/Documents/stanford_courses/CS140E/cs140e-win19/libpi/rpi.h:
+/Users/Stephaniewang/Documents/stanford_courses/CS140E/cs140e-win19/libpi/gpio.h:
+/Users/Stephaniewang/Documents/stanford_courses/CS140E/cs140e-win19/libpi/assert.h:
 pi-shell.h:

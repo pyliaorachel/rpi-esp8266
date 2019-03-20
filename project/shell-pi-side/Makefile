@@ -17,7 +17,7 @@ CFLAGS += -Wno-unused-function
 all: libpi $(NAME).bin 
 
 run:
-	my-install $(NAME).bin
+	../bootloader/unix-side/my-install $(NAME).bin
 
 # is there a better way to do this?
 libpi:

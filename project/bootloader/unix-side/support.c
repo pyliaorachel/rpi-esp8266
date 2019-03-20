@@ -42,7 +42,7 @@ int filter(const struct dirent *entry) {
     int i = 0;
     // Try to match the entry name with the USB port prefixes
     while (ttyusb_prefixes[i] != NULL) {
-        if (strncmp(entry->d_name, ttyusb_prefixes[i], strlen(ttyusb_prefixes[i])) == 0) // port name matched
+        if (strcmp(entry->d_name, "cu.SLAB_USBtoUART") == 0) // port name matched
             return 1;
         i++;
     }
