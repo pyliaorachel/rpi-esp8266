@@ -101,6 +101,16 @@ Software UART is less reliable than a native UART port. If we are using it to tr
 
 The method we use is to transmit a byte redundantly and let the receiving side vote for the correct byte. We refer to this method as the robust method. There can be other hacks such as increasing the bit sampling rate, which is more ideal since we don't need to change the code at the transmission side and also should be more efficient.
 
+###### Baudrate Issues
+
+Originally the bootloader talks over the native UART port with a 115200 baudrate. We will lower this value to 9600 so as not to raise the data corruption risk of software UART. In addition, we also set the baudrate of the native UART that talks to the ESP to 9600.
+
+Here are the values to be updated:
+
+- Software UART baudrate (pi-side): set `DELAY` in [sw-uart-libpi/sw-uart.h](https://github.com/pyliaorachel/rpi-esp8266/blob/master/sw-uart-libpi/sw-uart/sw-uart.h)
+- Hardware UART baudrate (unix-side): pass the correct argument to `set_tty_to_8n1` in [project/bootloader/unix-side/my-install.c](https://github.com/pyliaorachel/rpi-esp8266/blob/master/project/bootloader/unix-side/my-install.c)
+- Hardware UART baudrate (pi-side): set `AUX_MU_BAUD_REG` in `uart_init()` to the correct value in [sw-uart-libpi/my-uart.c](https://github.com/pyliaorachel/rpi-esp8266/blob/master/sw-uart-libpi/my-uart.c)
+
 ###### Adapting the `bootloader` and `my-install`
 
 After the `putc` and `getc` methods are implemented for the software UART, we can easily switch between the methods of native uart and software uart by e.g. defining a macro in [bootloader/shared-code/simple-boot.h](https://github.com/pyliaorachel/rpi-esp8266/blob/master/project/bootloader/shared-code/simple-boot.h). Now the bootloader and my-install knows they should use the robust method for communication.
