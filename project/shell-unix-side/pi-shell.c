@@ -69,23 +69,6 @@ int pi_readline(int fd, char *buf, unsigned sz) {
 	panic("too big!\n");
 }
 
-// read characters from the pi until we see a newline.
-int pi_CRLF_readline(int fd, char *buf, unsigned sz) {
-    for(int i = 0; i < sz; i++) {
-        int n;
-        if((n = read(fd, &buf[i], 1)) != 1) {
-            note("got %s res=%d, expected 1 byte\n", strerror(n), n);
-            note("assuming: pi connection closed.  cleaning up\n");
-            exit(0);
-        }
-        if(buf[i] == '\n') {
-            buf[i] = 0;
-            return 1;
-        }
-    }
-    panic("too big!\n");
-}
-
 #define expect_val(fd, v) (expect_val)(fd, v, #v)
 static void (expect_val)(int fd, unsigned v, const char *s) {
 	unsigned got = get_uint(fd);

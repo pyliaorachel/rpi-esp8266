@@ -30,12 +30,14 @@ static unsigned char get_byte(int fd) {
 	return b;
 }
 
+// Send redundante bytes for the receiving side to vote for the correct one.
 static void send_byte_robust(int fd, unsigned char b) {
     for (int i = 0; i < ROBUST_ITER; i++) {
         send_byte(fd, b);
     }
 }
 
+// Receive redundant bytes and vote for the correct one.
 static unsigned char get_byte_robust(int fd) {
     char hash[256] = {0};
     unsigned char byte;

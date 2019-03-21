@@ -115,6 +115,7 @@ void sw_uart_send_data(const char* data, unsigned nbytes) {
 void sw_uart_init_rx() {
   gpio_set_input(RX_SOFT);
   gpio_set_pullup(RX_SOFT);
+  // Uncomment this line if you want to use gpio interrupt for RX
   //gpio_int_init(RX_SOFT, FALLING_EDGE);
 }
 

@@ -76,7 +76,7 @@ PIX:pi rebooted.  shell done.
 Software UART is a bit banging technique that performs serial communication over two GPIO pins in a low-level way. To free up the native UART port for the ESP, we implemented a software UART and adapt our bootloader and my-install programs to use it. [sw-uart-libpi/sw-uart](https://github.com/pyliaorachel/rpi-esp8266/tree/master/libpi/sw-uart) contains the implementation of the software UART.
 
 > ###### The interrupt codes in the package
-> You will see `gpio-int` and `timer-int` in the package, which is the original RX implementation that detects the start signal using GPIO interrupts. We have get rid of the interrupt implementation and used a busy-waiting loop instead. You can ignore these two folders and the `int_handler()` function in `sw-uart.c`. We left it there since it works if you uncomment line 118 in `sw-uart.c` in the `sw_uart_init_rx()` function that enables the interrupts.
+> You will see `gpio-int` and `timer-int` in the package, which is the original RX implementation that detects the start signal using GPIO interrupts. We have get rid of the interrupt implementation and used a busy-waiting loop instead. You can ignore these two folders and the `int_handler()` function in `sw-uart.c`. We left it there since it works if you uncomment line 119 in `sw-uart.c` in the `sw_uart_init_rx()` function that enables the interrupts.
 
 ###### UART Protocol
 
