@@ -1,16 +1,19 @@
 # Adding networking to the pi with esp8266
-## Authors: Peiyu Liao, Stephanie Wang
+Authors: Peiyu Liao, Stephanie Wang
 
-## Set up
+## Introduction
 We've connected an ESP8266 WiFi module to our pi, which can be used to talk to servers via WiFi and send over data that has been gathered by sensors, or talk with another ESP8266 module.  
 The firmware running on the ESP is NodeMCU, and includes a Lua interpreter. We send Lua programs to run on the module via the ESP's UART.  
-Because our pi has only one hardware UART (one set of TX, RX pins), we wrote a software UART choosing two arbitrary GPIO pins as the TX, RX pins. Thus our pi communicates with unix via the software UART, and also communicates with the ESP module via the native UART. To write programs to the ESP, we extended the (lab10-shell)[https://github.com/dddrrreee/cs140e-win19/tree/master/labs/lab10-shell to launch a shell that sends Lua commands to the ESP. Our final demonstration shows that we can use our ESP as a client to communicate with a server, which is useful for projects that require networking.
+Because our pi has only one hardware UART (one set of TX, RX pins), we wrote a software UART choosing two arbitrary GPIO pins as the TX, RX pins. Thus our pi communicates with unix via the software UART, and also communicates with the ESP module via the native UART. To write programs to the ESP, we extended the [lab10-shell](https://github.com/dddrrreee/cs140e-win19/tree/master/labs/lab10-shell) to launch a shell that sends Lua commands to the ESP. Our final demonstration shows that we can use our ESP as a client to communicate with a server, which is useful for projects that require networking.  
+
+## Setup
+To setup the hardware, connect your CP2102 USB-TTL adapter to the software UART GPIO pins. Now connect the ESP's dedicated UART pins to the native UART TX RX pins on your pi. Copy `project/bootloader/pi-side/kernel.img` to your SD card as `kernel.img`, as our bootloader is now modified to use the software UART. Run `make` in the project folder. In `project/shell-unix-side` run `make.run`, which will `my-install` the pi-shell. Now you should see a the pi-shell prompt. Type `esp` and enter, and you will be asked to reset the ESP which is necessary to launch the Lua interpreter. Do this, and now you can type in commands that will run on the ESP!
 
 ## Software UART
-
+In [libpi/sw-uart](https://github.com/pyliaorachel/rpi-esp8266/tree/master/libpi/sw-uart) we define the software UART with functions to 
 
 ## ESP Shell
-We extended the (lab10-shell)[https://github.com/dddrrreee/cs140e-win19/tree/master/labs/lab10-shell] to include a command that launches a shell that communicates with the ESP. This is how we send programs to the ESP. 
+Our extended pi shell includes a command that launches a prompt to send programs to the ESP.
 
 ## Making two ESPs talk to eachother
 We'll send a simple "hello world" from client (our ESP) to a server ESP. This code was taken from this tutorial on [making two ESP8266 talk](https://randomnerdtutorials.com/how-to-make-two-esp8266-talk/).  
