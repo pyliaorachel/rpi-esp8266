@@ -1,26 +1,104 @@
-# Adding networking to the pi with esp8266
+# Adding Networking to the Pi with ESP8266
+
 Authors: Peiyu Liao, Stephanie Wang
 
 ## Introduction
-We've connected an ESP8266 WiFi module to our pi, which can be used to talk to servers via WiFi and send over data that has been gathered by sensors, or talk with another ESP8266 module.  
-The firmware running on the ESP is NodeMCU, and includes a Lua interpreter. We send Lua programs to run on the module via the ESP's UART.  
-Because our pi has only one hardware UART (one set of TX, RX pins), we wrote a software UART choosing two arbitrary GPIO pins as the TX, RX pins. Thus our pi communicates with unix via the software UART, and also communicates with the ESP module via the native UART. To write programs to the ESP, we extended the [lab10-shell](https://github.com/dddrrreee/cs140e-win19/tree/master/labs/lab10-shell) to launch a shell that sends Lua commands to the ESP. Our final demonstration shows that we can use our ESP as a client to communicate with a server, which is useful for projects that require networking.  
 
-## Setup
-To setup the hardware, connect your CP2102 USB-TTL adapter to the software UART GPIO pins. Now connect the ESP's dedicated UART pins to the native UART TX RX pins on your pi. Copy `project/bootloader/pi-side/kernel.img` to your SD card as `kernel.img`, as our bootloader is now modified to use the software UART. Run `make` in the project folder. In `project/shell-unix-side` run `make.run`, which will use the software UART to `my-install` the pi-shell. Now you should see a the pi-shell prompt. Type `esp` and enter, and you will be asked to reset the ESP which is necessary to launch the Lua interpreter. Hit the reset button on the module --  now you can type in Lua commands that will run on the ESP!
+We've connected an ESP8266 WiFi module to our pi, which can be used to talk to servers via WiFi and send over data that has been gathered by sensors, or talk with another ESP8266 module.
 
-## Software UART
-In [libpi/sw-uart](https://github.com/pyliaorachel/rpi-esp8266/tree/master/libpi/sw-uart) we define the software UART. We use a robust method of put/get since data transmission with GPIO pins may be unreliable and lose bits. 
+The firmware running on the ESP is NodeMCU, and includes a Lua interpreter. We send Lua programs to run on the module via the ESP's UART.
 
-## ESP Shell
-The pi shell in `/project/shell-pi-side/pi-shell.c` includes a command that launches a prompt to send programs to the ESP. In writing and reading to/from the ESP, we make sure to have line endings set to CRLF "\r\n". Useful functions to point out are:  
-`int esp_read_CRLF_line(char *buf, int sz)` reads characters from the ESP until we hit `\r\n`.  
-`void esp_write_CRLF_line(char *buf, int nbytes)` writes characters to the ESP with a `\r\n`.  
+Because our pi has only one hardware UART (one set of TX, RX pins), we implemented a software UART choosing two arbitrary GPIO pins as the TX, RX pins. Thus our pi communicates with unix via the software UART, and also communicates with the ESP module via the native UART.
 
+As a project to demonstrate the ability to communicate between the Pi and the ESP, we extended the [lab10-shell](https://github.com/dddrrreee/cs140e-win19/tree/master/labs/lab10-shell) to launch a shell that sends Lua commands to the ESP. Other applications can take reference from the pi-side shell code to communicate with the ESP.
 
-## Making two ESPs talk to eachother
-We'll send a simple "hello world" from client (our ESP) to a server ESP. This code was taken from this tutorial on [making two ESP8266 talk](https://randomnerdtutorials.com/how-to-make-two-esp8266-talk/).  
-Load the server script below to the ESP not connected to the pi:
+Our final demonstration shows that we can use our ESP as a client to communicate with a server, which is useful for projects that require networking.
+
+## Setup & Usage
+
+- Hardware
+    - Connect your CP2102 USB-TTL adapter to the software UART GPIO pins. GPIO 5 is assigned as TX, and GPIO 5 is assigned as RX. You can change the pin assignments in [sw-uart-libpi/sw-uart.h](https://github.com/pyliaorachel/rpi-esp8266/blob/master/sw-uart-libpi/sw-uart/sw-uart.h).
+    - Connect the ESP's dedicated UART pins to the native UART TX RX pins on your pi.
+- Software UART Bootloader
+    - Copy [bootloader/pi-side/kernel.img](https://github.com/pyliaorachel/rpi-esp8266/blob/master/project/bootloader/pi-side/kernel.img) to your SD card as `kernel.img`, as our bootloader is now modified to use the software UART.
+- Run the shell
+    - Set `LIBPI_PATH` to the [sw-uart-libpi](https://github.com/pyliaorachel/rpi-esp8266/tree/master/sw-uart-libpi) directory.
+        - Open `~/.bashrc` and write `export LIBPI_PATH="/path/to/sw-uart-libpi"`.
+        - Run `source ~/.bashrc`.
+    - Change directory to [project](https://github.com/pyliaorachel/rpi-esp8266/tree/master/project) and run `make` in the project folder.
+    - Change directory to [project/shell-unix-side](https://github.com/pyliaorachel/rpi-esp8266/tree/master/project/shell-unix-side) and run `make run`, which will use the software UART to `my-install` the pi-shell program. Now you should see a the pi-shell prompt.
+- Interacting with the shell
+    - Enter `esp` to open the ESP shell, which tells the Pi to communicate with the ESP.
+    - You will be asked to reset the ESP which is necessary to launch the Lua interpreter. Long press on the reset button on the ESP and release.
+    - Enter some Lua commands that will be sent over to control the ESP.
+        - Try the following commands to turn on the LED light:
+            - `gpio.mode(3, gpio.OUTPUT)`
+            - `gpio.write(3, gpio.LOW)`
+    - Exit the ESP shell by entering `exit`. This takes the unix shell back to the original Pi shell state.
+
+## Implementation Details
+
+### Software UART Bootloader
+
+Software UART is a bit banging technique that performs serial communication over two GPIO pins in a low-level way. To free up the native UART port for the ESP, we implemented a software UART and adapt our bootloader and my-install programs to it. [sw-uart-libpi/sw-uart](https://github.com/pyliaorachel/rpi-esp8266/tree/master/libpi/sw-uart) contains the implementation of the software UART.
+
+###### UART Protocol
+
+![protocol](https://cdn.sparkfun.com/assets/1/8/d/c/1/51142c09ce395f0e7e000002.png)
+
+In the UART protocol, a byte transmitted is preceded with a start bit (low signal) and ends with an end bit (high signal), hence a total of 10 bits. The line is held high when idle. The time delay between two bits is `1 / baud_rate`, e.g. it is 104 μs for a baudrate of `9600`.
+
+The steps for implementing the software TX / RX pins are thus:
+
+- TX pin
+    - Sends a low signal (start bit). Delay for 104 μs.
+    - Sends the 8 bits of the data byte. Delay each for 104 μs.
+    - Sends a high signal (end bit). Delay for 104 μs.
+- RX pin
+    - Waits for a low signal (start bit). Delay for 104 μs.
+    - Reads 8 bits of data. Delay each for 104 μs.
+    - Reads a high signal (end bit).
+
+###### Robust Communication
+
+Software UART is less reliable than a native UART port. If we are using it to transmit a lot of data, it is better to do some hacks to ensure a zero data corruption rate.
+
+The method we use is to transmit a byte redundantly and let the receiving side vote for the correct byte. We refer to this method as the robust method. There can be other hacks such as in creasing the bit sampling rate, which is more ideal since we don't need to change the code at the transmission side and should be more efficient.
+
+###### Adapting the `bootloader` and `my-install`
+
+After the `putc` and `getc` methods are implemented for the software UART, we can easily switch between the methods between native uart and software uart by e.g. defining a macro in [bootloader/shared-code/simple-boot.h](https://github.com/pyliaorachel/rpi-esp8266/blob/master/project/bootloader/shared-code/simple-boot.h). Now the bootloader and my-install knows they should use the robust method for communication.
+
+Another thing to note is the timout issue of the file descriptor. In our bootloader protocol, `my-install` waits for the `ACK` signal after sending the binary data and the `EOT` signal. If we implement the robust method, the data transmission may take too long, and `my-install` may timeout on waiting for `ACK`.
+
+One solution is to increase the timeout time of the file descriptor in [bootloader/unix-side/my-install.c](https://github.com/pyliaorachel/rpi-esp8266/blob/master/project/bootloader/unix-side/my-install.c). A possibly better solution, which is implemented, is to let the bootloader send back an `ACK` for every several bytes of data received. See `get_binary()` function in [bootloader.c](https://github.com/pyliaorachel/rpi-esp8266/blob/master/project/bootloader/pi-side/bootloader.c) and `send_binary()` function in [simple-boot.c](https://github.com/pyliaorachel/rpi-esp8266/blob/master/project/bootloader/unix-side/simple-boot.c).
+
+### ESP Shell
+
+We create an interface connected to the Lua interface of the ESP through the Pi. This way we can send Lua commands to the ESP as if the ESP is directly connected to the unix side. This may not seem useful as a practical application, but it demonstrates that the Pi can talk to and control the ESP through the native UART port, and hence we can say that the Pi is equipped with a network function.
+
+The ESP shell is integrated with the Pi shell from [lab10](https://github.com/dddrrreee/cs140e-win19/tree/master/labs/lab10-shell) and can be opened by an `esp` command to the Pi shell and exited by an `exit` command.
+
+###### Unix-Side Shell
+
+The `esp()` function in [project/shell-unix-side/pi-shell.c](https://github.com/pyliaorachel/rpi-esp8266/blob/master/project/shell-unix-side/pi-shell.c) handles the ESP shell interface. It is straightforward, just reading the commands from user and send it to Pi, and read the response from the Pi.
+
+Note that the ESP takes commands that end with `\r\n`, i.e. CRLF line endings, hence we need to wrap the commands a bit before passing to Pi.
+
+###### Pi-Side Shell
+
+The `strncmp(buf, "esp", 3) == 0` branch section in `notmain()` of [project/shell-pi-side/pi-shell.c](https://github.com/pyliaorachel/rpi-esp8266/blob/master/project/shell-pi-side/pi-shell.c) opens the communication channel with ESP. It reads the commands from the unix side, send it to ESP, read the response from ESP, and send it back to the unix side.
+
+In order to read the response correctly, it is critical to understand how the Lua interface with the ESP works. We experimented with the ESP directly via [CoolTerm](http://freeware.the-meiers.org/), and found out that every character sent to the ESP will be echoed back. Thus in the function that writes data, make sure every echoed byte is consumed, or else the response parsed will not be as expected.
+
+In addition to the echoed byte, there are some garbage bytes sent from the ESP after reset. Make sure to read them away.
+
+### Demo: Making Two ESPs Talk to Eachother
+
+We'll send a simple "hello world" from client (our ESP connected to Pi) to a server ESP (setup using CoolTerm). The following scripts are taken from this tutorial on [making two ESP8266 talk](https://randomnerdtutorials.com/how-to-make-two-esp8266-talk/).  
+
+First load the server script below to the server ESP, which creats an access point with the specified ssid and password, and listens for incoming data:
+
 ```
 print("ESP8266 Server")
 wifi.setmode(wifi.STATIONAP);
@@ -38,7 +116,7 @@ sv:listen(80, function(conn)
 end)
 ```
 
-Copy the client script below into the ESP shell to send a "hello world" message:
+Then send the following commands to the ESP through the ESP shell, which lets the client connect with the server, and send a "hello world" message to the server:
 ```
 print("ESP8266 Client")
 wifi.sta.disconnect()
@@ -52,6 +130,14 @@ cl=net.createConnection(net.TCP, 0)
 cl:connect(80,"192.168.4.1")
 cl:send("Hello World!")
 ```
+
+You should see "Received Data: Hello World!" appearing on your server side.
+
+## Future Work
+
+- Wrap the communication with ESP into a package and export its interface, instead of scattering the communication details in the pi-shell.
+- Implement a tool that loads a lua script file and send it to ESP.
+- Create an practical application that sends data to the cloud through the ESP interface.
 
 ## Supporting Documents
 
