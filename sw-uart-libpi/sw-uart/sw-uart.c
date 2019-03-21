@@ -28,6 +28,7 @@ unsigned char sw_uart_getc_ll() {
   }
   // End bit
   gpio_read(RX_SOFT);
+  // not sure why we don't need delay here.
   return c;
 }
 
